@@ -1,0 +1,30 @@
+service: sjofartstidningen-nanny
+
+custom:
+  defaultStage: development
+  defaultRegion: eu-north-1
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, self:custom.defaultStage}
+  region: ${opt:region, self:custom.defaultRegion}
+
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:GetObject'
+      Resource: ${env:UPLOADS_BUCKET_ARN}
+
+environment:
+  NODE_ENV: ${self:provider.stage}
+  UPLOADS_BUCKET: ${env:UPLOADS_BUCKET_NAME}
+
+functions:
+  processImage:
+    handler: handler.processImage
+    description: Image processing service
+    events:
+      - http:
+          path: '{proxy+}'
+          method: get
