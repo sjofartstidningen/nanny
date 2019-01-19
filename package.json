@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "parcel build src/handler.ts --target=node",
+    "build": "rm -rf dist && parcel build src/handler.ts --target node --no-source-maps",
     "package": "serverless package",
     "deploy": "serverless deploy",
     "test": "jest --env=node"
