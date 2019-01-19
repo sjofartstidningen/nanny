@@ -22,7 +22,7 @@ environment:
 
 functions:
   processImage:
-    handler: handler.processImage
+    handler: dist/handler.processImage
     description: Image processing service
     events:
       - http:

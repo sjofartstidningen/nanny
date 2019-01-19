@@ -1,3 +1,6 @@
+# Build output
+dist
+
 # Logs
 logs
 *.log
@@ -16,3 +19,6 @@ typings/
 
 # Serverless output
 .serverless
+
+# Parcel cache
+.cache
