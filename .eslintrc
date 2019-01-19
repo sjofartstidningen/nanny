@@ -1,5 +1,7 @@
 {
-  "extends": "react-app",
+  "parser": "typescript-eslint-parser",
+  "extends": ["react-app"],
+  "plugins": ["typescript"],
   "env": {
     "es6": true,
     "jest": true,
