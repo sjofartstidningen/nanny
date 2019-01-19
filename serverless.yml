@@ -1,4 +1,4 @@
-service: sjofartstidningen-nanny
+service: nanny
 
 custom:
   defaultStage: development
