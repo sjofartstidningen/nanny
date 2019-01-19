@@ -1,21 +1,20 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
+    "lib": ["esnext", "dom"],
     "module": "commonjs",
-    "target": "esnext",
-    "lib": ["es6", "es2017", "dom"],
     "moduleResolution": "node",
-    "rootDir": "./src",
-    "sourceMap": true,
-    "allowJs": true,
+    "target": "es2017",
+    "strict": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "composite": true,
+    "skipLibCheck": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noImplicitThis": true,
-    "strictNullChecks": true,
-    "noImplicitReturns": true,
-    "preserveConstEnums": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "preserveWatchOutput": true,
+    "plugins": [{ "name": "typescript-tslint-plugin" }],
+    "typeRoots": ["./node_modules/@types", "types"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src"]
 }
