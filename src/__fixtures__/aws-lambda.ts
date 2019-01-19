@@ -8,7 +8,7 @@ const toMultipart = <Value>(obj: {
 const defaultHeaders = { Accept: 'application/json' };
 const defaultQueryStringParameters = { foo: 'bar' };
 
-const generateApiGatewayEvent = ({
+const mockApiGatewayEvent = ({
   body = JSON.stringify({ message: 'hello world' }),
   path = '/path/to/resource',
   headers = defaultHeaders,
@@ -58,7 +58,7 @@ const generateApiGatewayEvent = ({
   resource: '/{proxy+}',
 });
 
-const generateContext = (): Context => ({
+const mockLambdaContext = (): Context => ({
   callbackWaitsForEmptyEventLoop: false,
   functionName: 'functionName',
   functionVersion: '$LATEST',
@@ -73,4 +73,4 @@ const generateContext = (): Context => ({
   succeed: jest.fn(),
 });
 
-export { generateApiGatewayEvent, generateContext };
+export { mockApiGatewayEvent, mockLambdaContext };
