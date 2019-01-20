@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, Callback, Context, Handler } from 'aws-lambda';
 import { HttpError } from 'http-errors';
-import { parseQuery } from './utils';
+import { parseQuery } from './utils/parse-query';
 
 interface Response {
   statusCode: number;

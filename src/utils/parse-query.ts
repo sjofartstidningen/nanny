@@ -1,9 +1,13 @@
 import { BadRequest } from 'http-errors';
 import mapValues from 'lodash.mapvalues';
-import { QueryArgs, ResizeArgs } from './types';
+import { CropStrategy, Gravity, QueryArgs, ResizeArgs } from '../types';
+import { anyPass } from './fp';
 
 const int = (s: string): number => Number.parseInt(s, 10);
 const isNaN = (n: number): boolean => Number.isNaN(n);
+
+const anyIsNull = (l: any[]) => anyPass(v => v == null, l);
+const anyIsNaN = (l: number[]) => anyPass(Number.isNaN, l);
 
 const parseNumber = (val: string): number => {
   const num = int(val);
@@ -13,7 +17,7 @@ const parseNumber = (val: string): number => {
 
 const parseList = (val: string) => {
   const [w, h] = val.split(',');
-  if (w == null || h == null || isNaN(int(w)) || isNaN(int(h))) {
+  if (anyIsNull([w, h]) || anyIsNaN([int(w), int(h)])) {
     throw new Error(
       `"${val}" must be a comma separated list (<width>,<height>)`,
     );
@@ -37,16 +41,7 @@ const parseCrop = (val: string) => {
     return ret;
   } catch (error) {
     const [x, y, w, h] = val.split(',');
-    if (
-      x == null ||
-      y == null ||
-      w == null ||
-      h == null ||
-      isNaN(int(x)) ||
-      isNaN(int(y)) ||
-      isNaN(int(w)) ||
-      isNaN(int(h))
-    ) {
+    if (anyIsNull([x, y, w, h]) || anyIsNaN([int(x), int(y), int(w), int(h)])) {
       throw new Error(
         `"${val}" must be a comma separated list (<x>,<y>,<width>,<height>)`,
       );
@@ -56,12 +51,12 @@ const parseCrop = (val: string) => {
   }
 };
 
-const parseEnum = (validEntries: string[]) => (val: string) => {
+const parseEnum = <T>(validEntries: T[]) => (val: any): T => {
   if (!validEntries.includes(val)) {
     throw new Error(`"${val}" must be one of ${validEntries.join(', ')}.`);
   }
 
-  return val;
+  return val as T;
 };
 
 const parsers = {
@@ -74,8 +69,8 @@ const parsers = {
   lb: parseList,
   crop: parseCrop,
   webp: parseBoolean,
-  crop_strategy: parseEnum(['smart', 'entropy', 'attention']),
-  gravity: parseEnum([
+  crop_strategy: parseEnum<CropStrategy>(['smart', 'entropy', 'attention']),
+  gravity: parseEnum<Gravity>([
     'north',
     'northeast',
     'east',
@@ -90,19 +85,20 @@ const parsers = {
 };
 
 const parseQuery = (query: QueryArgs): ResizeArgs => {
-  const args = mapValues(query, (val, key: keyof QueryArgs) => {
+  const keys = Object.keys(query);
+  const args: ResizeArgs = keys.reduce((a: ResizeArgs, key: string) => {
     try {
-      if (!val) return undefined;
-      if (parsers[key]) return parsers[key](val);
-      return undefined;
-    } catch (error) {
-      const err = new BadRequest(
-        `${key} is not valid. Reason: ${error.message}`,
-      );
+      const val = query[key as keyof QueryArgs];
+      const parser = parsers[key as keyof QueryArgs];
 
-      throw err;
+      if (val && parser) return { ...a, [key]: parser(val) };
+      return a;
+    } catch (error) {
+      throw new BadRequest(
+        `Query parameter "${key}" is not valid. Reason: ${error.message}`,
+      );
     }
-  });
+  }, {});
 
   return args as ResizeArgs;
 };
