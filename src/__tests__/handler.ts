@@ -1,4 +1,3 @@
-import { Forbidden } from 'http-errors';
 import {
   mockApiGatewayEvent,
   mockLambdaContext,
@@ -7,18 +6,16 @@ import { processImage } from '../handler';
 
 describe('handler: processImage', () => {
   it('should return a APIProxyEvent', async () => {
-    const event = mockApiGatewayEvent();
+    const event = mockApiGatewayEvent({ path: '/image.jpg' });
     const context = mockLambdaContext();
     const result = await processImage(event, context);
 
-    expect(result).toEqual(expect.any(Object));
+    expect(JSON.parse(result.body)).toHaveProperty('message', 'Hello world');
   });
 
   it('should throw an error if trying to access root level', async () => {
-    const event = mockApiGatewayEvent();
+    const event = mockApiGatewayEvent({ path: '/' });
     const context = mockLambdaContext();
-
-    event.path = '/';
 
     await expect(processImage(event, context)).resolves.toHaveProperty(
       'statusCode',
@@ -27,10 +24,8 @@ describe('handler: processImage', () => {
   });
 
   it('should throw an error if trying to access folder', async () => {
-    const event = mockApiGatewayEvent();
+    const event = mockApiGatewayEvent({ path: '/path/to/folder' });
     const context = mockLambdaContext();
-
-    event.path = '/path/to/folder';
 
     await expect(processImage(event, context)).resolves.toHaveProperty(
       'statusCode',

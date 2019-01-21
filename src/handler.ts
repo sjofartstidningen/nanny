@@ -8,6 +8,7 @@ import { extname } from 'path';
 import { AllowedExtensions } from './types';
 import { createResponse } from './utils/create-response';
 import { isEmpty } from './utils/fp';
+import { getEnv } from './utils/get-env';
 import { parseQuery } from './utils/parse-query';
 import { supportsWebp } from './utils/supports-webp';
 
@@ -25,7 +26,9 @@ async function processImage(
 
     const query = event.queryStringParameters || {};
     const resizeArgs = parseQuery(query);
-    if (process.env.FORCE_WEBP) resizeArgs.webp = supportsWebp(event.headers);
+    if (getEnv('FORCE_WEBP', false)) {
+      resizeArgs.webp = supportsWebp(event.headers);
+    }
 
     // const { file, info: fileInfo } = await S3.getObject(key);
 
