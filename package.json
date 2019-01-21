@@ -50,9 +50,9 @@
   "lint-staged": {
     "concurrent": false,
     "linters": {
-      "*.{ts}": [
+      "*.ts": [
         "jest --env=node --passWithNoTests --findRelatedTests",
-        "tslint"
+        "tslint --fix"
       ],
       "*.{js,ts,json,md,yml}": [
         "prettier --write",
