@@ -22,3 +22,6 @@ typings/
 
 # Parcel cache
 .cache
+
+# Temporary directory for local S3 mock
+.tmp
