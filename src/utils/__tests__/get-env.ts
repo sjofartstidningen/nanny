@@ -9,4 +9,10 @@ describe('Util: getEnv', () => {
   it('should fallback to default value if provided', () => {
     expect(getEnv('FOO', 'bar')).toEqual('bar');
   });
+
+  it('should only throw if defaultValue is undefined', () => {
+    expect(getEnv('FOO', false)).toEqual(false);
+    expect(getEnv('FOO', null)).toEqual(null);
+    expect(() => getEnv('FOO', undefined)).toThrow(Error);
+  });
 });
