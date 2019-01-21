@@ -1,36 +1,46 @@
-import { APIGatewayProxyEvent, Callback, Context, Handler } from 'aws-lambda';
-import { HttpError } from 'http-errors';
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Context,
+} from 'aws-lambda';
+import { Forbidden, HttpError } from 'http-errors';
+import { extname } from 'path';
+import { createResponse } from './utils/create-response';
+import { isEmpty } from './utils/fp';
 import { parseQuery } from './utils/parse-query';
+import { supportsWebp } from './utils/supports-webp';
+import { AllowedExtensions } from './types';
 
-interface Response {
-  statusCode: number;
-  headers: object;
-  body: string;
-  isBase64Encoded: boolean;
-}
-
-const processImage: Handler<APIGatewayProxyEvent, Response> = async (
+async function processImage(
   event: APIGatewayProxyEvent,
   context: Context,
-  callback: Callback,
-) => {
+): Promise<APIGatewayProxyResult> {
   try {
-    const queryArgs = parseQuery(event.queryStringParameters || {});
+    const key = event.path.substring(1);
+    const ext = extname(key)
+      .substring(1)
+      .toLowerCase();
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': `application/json`,
-        'Cache-Control': `max-age=${365 * 24 * 60 * 60}`,
-        'Last-Modified': new Date().toUTCString(),
-      },
-      body: JSON.stringify({
-        message: 'Hello world',
-        env: process.env.NODE_ENV,
-        queryArgs,
-      }),
-      isBase64Encoded: false,
-    };
+    if (!key || !ext) throw new Forbidden('Not allowed to access folders');
+
+    const query = event.queryStringParameters || {};
+    const resizeArgs = parseQuery(query);
+    if (process.env.FORCE_WEBP) resizeArgs.webp = supportsWebp(event.headers);
+
+    // const { file, info: fileInfo } = await S3.getObject(key);
+
+    // if (!(ext in AllowedExtensions) || isEmpty(resizeArgs) || isAnimatable(file)) {
+    //   return createResponse(file, { contentType: fileInfo.contentType });
+    // }
+
+    // const { image, info: imageInfo } = await Image.resize(file, resizeArgs);
+    // return createResponse(image, { contentType: imageInfo.contentType });
+
+    return createResponse({
+      message: 'Hello world',
+      env: process.env,
+      event,
+    });
   } catch (error) {
     let statusCode: number;
     let message: string;
@@ -43,13 +53,8 @@ const processImage: Handler<APIGatewayProxyEvent, Response> = async (
       message = 'Internal server error';
     }
 
-    return {
-      statusCode,
-      headers: { 'Content-Type': 'text/plain' },
-      body: message,
-      isBase64Encoded: false,
-    };
+    return createResponse(message, { statusCode });
   }
-};
+}
 
 export { processImage };

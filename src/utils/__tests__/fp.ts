@@ -1,4 +1,4 @@
-import { allPass } from '../fp';
+import { allPass, anyPass, isEmpty } from '../fp';
 
 const isNumber = (x: any) => typeof x === 'number';
 
@@ -10,9 +10,46 @@ describe('util: fp.allPass', () => {
     expect(allPass(isNumber, [1, 2, 3, 'string'])).toBeFalsy();
   });
 
-  it('should bail early as soon as a false value is found', () => {
+  it('should return early as soon as a false value is found', () => {
     const predicate = jest.fn(isNumber);
     allPass(predicate, ['1', 2, 3, 4]);
     expect(predicate).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('util: fp.anyPass', () => {
+  it('should evaluate every val in the array and see if all pass the predicate', () => {
+    expect(anyPass((x: any) => true, [1, 2, 3, 4])).toBeTruthy();
+    expect(anyPass((x: any) => false, [1, 2, 3, 4])).toBeFalsy();
+    expect(anyPass(isNumber, ['1', '2', '3', '4'])).toBeFalsy();
+    expect(anyPass(isNumber, ['1', '2', '3', 4])).toBeTruthy();
+  });
+
+  it('should return early as soon as a true value is found', () => {
+    const predicate = jest.fn(isNumber);
+    anyPass(predicate, ['1', 2, '3', '4']);
+    expect(predicate).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('util: fp.isEmpty', () => {
+  it('should determine if an object is empty or not', () => {
+    expect(isEmpty({})).toBeTruthy();
+    expect(isEmpty([])).toBeTruthy();
+    expect(isEmpty({ a: 1 })).toBeFalsy();
+
+    class Bar {
+      public a: number = 1;
+      static b: number = 2;
+    }
+    expect(isEmpty(new Bar())).toBeFalsy();
+    expect(isEmpty(Bar)).toBeFalsy();
+
+    class Foo {
+      fn() {
+        return 0;
+      }
+    }
+    expect(isEmpty(new Foo())).toBeTruthy();
   });
 });

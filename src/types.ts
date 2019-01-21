@@ -1,3 +1,10 @@
+export interface APIGatewayResponse {
+  statusCode: number;
+  headers: object;
+  body: string;
+  isBase64Encoded: boolean;
+}
+
 export type CropStrategy = 'smart' | 'attention' | 'entropy';
 export type Gravity =
   | 'north'
@@ -38,4 +45,13 @@ export interface QueryArgs {
   webp?: string;
   lb?: string;
   background?: string;
+}
+
+export enum AllowedExtensions {
+  jpeg = 'jpeg',
+  jpg = 'jpg',
+  png = 'png',
+  webp = 'webp',
+  gif = 'gif',
+  svg = 'svg',
 }

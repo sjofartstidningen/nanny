@@ -20,4 +20,8 @@ const anyPass = <T>(predicate: (val: T) => boolean, values: T[]): boolean => {
   return pass;
 };
 
-export { allPass, anyPass };
+const isEmpty = (o: object): boolean => {
+  return Object.keys(o).length < 1;
+};
+
+export { allPass, anyPass, isEmpty };

@@ -1,3 +1,4 @@
+import { Forbidden } from 'http-errors';
 import {
   mockApiGatewayEvent,
   mockLambdaContext,
@@ -8,10 +9,32 @@ describe('handler: processImage', () => {
   it('should return a APIProxyEvent', async () => {
     const event = mockApiGatewayEvent();
     const context = mockLambdaContext();
-    const callback = jest.fn();
-    const result = await processImage(event, context, callback);
+    const result = await processImage(event, context);
 
     expect(result).toEqual(expect.any(Object));
-    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('should throw an error if trying to access root level', async () => {
+    const event = mockApiGatewayEvent();
+    const context = mockLambdaContext();
+
+    event.path = '/';
+
+    await expect(processImage(event, context)).resolves.toHaveProperty(
+      'statusCode',
+      403,
+    );
+  });
+
+  it('should throw an error if trying to access folder', async () => {
+    const event = mockApiGatewayEvent();
+    const context = mockLambdaContext();
+
+    event.path = '/path/to/folder';
+
+    await expect(processImage(event, context)).resolves.toHaveProperty(
+      'statusCode',
+      403,
+    );
   });
 });
