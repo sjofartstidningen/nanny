@@ -1,4 +1,4 @@
-import { allPass, anyPass, isEmpty } from '../fp';
+import { allPass, anyPass, clamp, isEmpty } from '../fp';
 
 const isNumber = (x: any) => typeof x === 'number';
 
@@ -32,6 +32,14 @@ describe('util: fp.anyPass', () => {
   });
 });
 
+describe('util: fs.clam', () => {
+  it('should clamp a value between min and max', () => {
+    expect(clamp(5, 0, 10)).toEqual(5);
+    expect(clamp(11, 0, 10)).toEqual(10);
+    expect(clamp(-1, 0, 10)).toEqual(0);
+  });
+});
+
 describe('util: fp.isEmpty', () => {
   it('should determine if an object is empty or not', () => {
     expect(isEmpty({})).toBeTruthy();
@@ -39,14 +47,14 @@ describe('util: fp.isEmpty', () => {
     expect(isEmpty({ a: 1 })).toBeFalsy();
 
     class Bar {
+      public static b: number = 2;
       public a: number = 1;
-      static b: number = 2;
     }
     expect(isEmpty(new Bar())).toBeFalsy();
     expect(isEmpty(Bar)).toBeFalsy();
 
     class Foo {
-      fn() {
+      public fn() {
         return 0;
       }
     }
