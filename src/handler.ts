@@ -5,11 +5,11 @@ import {
 } from 'aws-lambda';
 import { Forbidden, HttpError } from 'http-errors';
 import { extname } from 'path';
+import { AllowedExtensions } from './types';
 import { createResponse } from './utils/create-response';
 import { isEmpty } from './utils/fp';
 import { parseQuery } from './utils/parse-query';
 import { supportsWebp } from './utils/supports-webp';
-import { AllowedExtensions } from './types';
 
 async function processImage(
   event: APIGatewayProxyEvent,
