@@ -17,6 +17,15 @@ const parseNumber = (key: string) => (val: string): number => {
   return num;
 };
 
+const parseFloatingNumber = (key: string) => (val: string): number => {
+  const num = Number.parseFloat(val);
+  if (isNaN(num)) {
+    throw new Error(`Parameter "${key}" is not a number. Supplied: ${val}`);
+  }
+
+  return num;
+};
+
 const parseList = (key: string) => (val: string) => {
   const [w, h] = val.split(',');
   if (anyIsNull([w, h]) || anyIsNaN([int(w), int(h)])) {
@@ -69,7 +78,7 @@ const evolver = {
   w: parseNumber('w'),
   h: parseNumber('h'),
   quality: parseNumber('quality'),
-  zoom: parseNumber('zoom'),
+  zoom: parseFloatingNumber('zoom'),
   resize: parseList('resize'),
   fit: parseList('fit'),
   lb: parseList('lb'),
