@@ -33,18 +33,7 @@ export interface ResizeArgs {
 }
 
 export interface QueryArgs {
-  w?: string;
-  h?: string;
-  quality?: string;
-  resize?: string;
-  crop_strategy?: string;
-  gravity?: string;
-  fit?: string;
-  crop?: string;
-  zoom?: string;
-  webp?: string;
-  lb?: string;
-  background?: string;
+  [key: string]: string;
 }
 
 export enum AllowedExtensions {
