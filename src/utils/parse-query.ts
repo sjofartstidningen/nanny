@@ -51,14 +51,16 @@ const parseCrop = (key: string) => (val: string) => {
     const ret = parseBoolean(key)(val);
     return ret;
   } catch (error) {
-    const [x, y, w, h] = val.split(',');
-    if (anyIsNull([x, y, w, h]) || anyIsNaN([int(x), int(y), int(w), int(h)])) {
+    const cropValues = val.split(',').map(int);
+
+    if (cropValues.length < 4 || anyIsNaN(cropValues)) {
       throw new Error(
-        `Parameter "${key}" must be a comma separated list (<x>,<y>,<width>,<height>) or a boolean value. Supplied: ${val}`,
+        `Parameter "${key}" must be a comma separated list of pixel or percent values (<x>,<y>,<width>,<height>) or a boolean value. Supplied: ${val}`,
       );
     }
 
-    return { x: int(x), y: int(y), w: int(w), h: int(h) };
+    const [x, y, w, h] = cropValues;
+    return { x, y, w, h, unit: val.includes('px') ? 'pixel' : 'percent' };
   }
 };
 

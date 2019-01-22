@@ -25,7 +25,15 @@ export interface ResizeArgs {
   crop_strategy?: CropStrategy;
   gravity?: Gravity;
   fit?: { w: number; h: number };
-  crop?: boolean | { x: number; y: number; w: number; h: number };
+  crop?:
+    | boolean
+    | {
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        unit: 'pixel' | 'percent';
+      };
   zoom?: number;
   webp?: boolean;
   lb?: { w: number; h: number };

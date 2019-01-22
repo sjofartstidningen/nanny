@@ -41,7 +41,10 @@ describe('util: parseQuery', () => {
     expect(parseQuery({ crop: 'false' })).toEqual({ crop: false });
     expect(parseQuery({ crop: '0' })).toEqual({ crop: false });
     expect(parseQuery({ crop: '10,10,90,90' })).toEqual({
-      crop: { x: 10, y: 10, w: 90, h: 90 },
+      crop: { x: 10, y: 10, w: 90, h: 90, unit: 'percent' },
+    });
+    expect(parseQuery({ crop: '10px,10px,90px,90px' })).toEqual({
+      crop: { x: 10, y: 10, w: 90, h: 90, unit: 'pixel' },
     });
   });
 
