@@ -36,6 +36,7 @@ describe('handler: processImage', () => {
 
   it('should return an image in webp format if supported and FORCE_WEBP=true', async () => {
     process.env.FORCE_WEBP = 'true';
+
     const event = mockApiGatewayEvent({
       path: '/image.jpg',
       queryStringParameters: { w: '100' },
@@ -48,6 +49,8 @@ describe('handler: processImage', () => {
     const file = Buffer.from(result.body, 'base64');
     const metadata = await sharp(file).metadata();
     expect(metadata).toHaveProperty('format', 'webp');
+
+    process.env.FORCE_WEBP = undefined;
   });
 
   it('should throw an error if trying to access root level', async () => {
