@@ -6,8 +6,19 @@ import * as Crop from '../utils/smart-crop';
 
 const readFile = promisify(fs.readFile);
 
-const readImageSource = async (image: string): Promise<Buffer> =>
-  readFile(path.join(__dirname, '../test-utils/bucket', image));
+const cache = new Map<string, Buffer>();
+
+const readImageSource = async (image: string): Promise<Buffer> => {
+  const fromCache = cache.get(image);
+  if (fromCache) return fromCache;
+
+  const buffer = await readFile(
+    path.join(__dirname, '../test-utils/bucket', image),
+  );
+
+  cache.set(image, buffer);
+  return buffer;
+};
 
 describe('Image.resize', () => {
   it('should preserve file type if args.webp is not defined', async () => {
