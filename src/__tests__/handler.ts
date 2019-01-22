@@ -1,6 +1,6 @@
 const bucket = 'handler-bucket';
 const hostname = 'localhost';
-const port = 4578;
+const port = 1234;
 
 process.env.S3_BUCKET = bucket;
 process.env.S3_HOSTNAME = hostname;

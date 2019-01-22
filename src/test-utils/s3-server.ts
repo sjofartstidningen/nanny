@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { Server } from 'http';
+import { lookup } from 'mime-types';
 import * as os from 'os';
 import * as path from 'path';
 import S3rver from 's3rver';
@@ -44,18 +45,7 @@ const uploadToBucket = async ({
   const bufferContent = await readFile(filePath);
 
   const ext = path.extname(filePath).substring(1);
-  const contentType =
-    ext === 'pdf'
-      ? 'application/pdf'
-      : ext === 'json'
-      ? 'application/json'
-      : ext === 'jpg'
-      ? 'image/jpeg'
-      : ext === 'svg'
-      ? 'image/svg+xml'
-      : ['jpeg', 'png', 'gif'].includes(ext)
-      ? `image/${ext}`
-      : undefined;
+  const contentType = lookup(ext) || undefined;
 
   await S3.putObject({
     Key: key,
