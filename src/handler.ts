@@ -20,11 +20,12 @@ async function processImage(
 ): Promise<APIGatewayProxyResult> {
   try {
     const key = event.path.substring(1);
-    const ext = extname(key)
+    const extension = extname(key)
       .substring(1)
       .toLowerCase();
 
-    if (!key || !ext) throw new Forbidden('Not allowed to access folders');
+    if (!key || !extension)
+      throw new Forbidden('Not allowed to access folders');
 
     const query = event.queryStringParameters || {};
     const resizeArgs = parseQuery(query);
@@ -34,7 +35,7 @@ async function processImage(
 
     const { file, info: fileInfo } = await S3.getObject(key);
     const contentType =
-      fileInfo.contentType || mime.lookup(extname(key)) || undefined;
+      fileInfo.contentType || mime.lookup(extension) || undefined;
 
     if (!(await canProcess(file, { key, contentType }))) {
       return createResponse(file, { contentType });
