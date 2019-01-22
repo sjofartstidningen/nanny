@@ -53,7 +53,7 @@ const createResponse = (
     statusCode,
     headers: {
       'Content-Type':
-        contentType || isPlainText ? 'text/plain' : 'application/json',
+        contentType || (isPlainText ? 'text/plain' : 'application/json'),
       'Cache-Control':
         typeof cache === 'number'
           ? `max-age=${cache}`

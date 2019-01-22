@@ -18,7 +18,7 @@ const scope = createScope({ hostname, port, bucket });
 beforeAll(() => scope.init());
 afterAll(() => scope.teardown());
 
-describe('handler: processImage', () => {
+describe.only('handler: processImage', () => {
   it('should transform an image before returning it', async () => {
     const event = mockApiGatewayEvent({
       path: '/image.jpg',
@@ -28,6 +28,7 @@ describe('handler: processImage', () => {
 
     const result = await processImage(event, context);
     expect(result).toHaveProperty('body');
+    expect(result.headers).toHaveProperty('Content-Type', 'image/jpeg');
 
     const file = Buffer.from(result.body, 'base64');
     const metadata = await sharp(file).metadata();
@@ -45,6 +46,7 @@ describe('handler: processImage', () => {
     const context = mockLambdaContext();
 
     const result = await processImage(event, context);
+    expect(result.headers).toHaveProperty('Content-Type', 'image/webp');
 
     const file = Buffer.from(result.body, 'base64');
     const metadata = await sharp(file).metadata();
