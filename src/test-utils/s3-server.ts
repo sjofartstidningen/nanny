@@ -4,7 +4,7 @@ import * as os from 'os';
 import * as path from 'path';
 import S3rver from 's3rver';
 import { promisify } from 'util';
-import { S3 } from '../src/s3';
+import { S3 } from '../s3';
 
 const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);

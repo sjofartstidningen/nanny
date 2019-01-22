@@ -7,8 +7,8 @@ process.env.S3_HOSTNAME = hostname;
 process.env.S3_PORT = `${port}`;
 
 import { NotFound } from 'http-errors';
-import { createScope } from '../../test/s3-server';
 import { getObject } from '../s3';
+import { createScope } from '../test-utils/s3-server';
 
 const scope = createScope({ hostname, port, bucket });
 beforeAll(() => scope.init());

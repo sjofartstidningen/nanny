@@ -8,7 +8,7 @@ const readFile = promisify(fs.readFile);
 describe('Util: smartCrop', () => {
   it('should intelligently choose area to extract from image based on expected width and height', async () => {
     const file = await readFile(
-      path.join(__dirname, '../../../test/bucket/image.png'),
+      path.join(__dirname, '../../test-utils/bucket/image.png'),
     );
 
     const result = await smartCrop(file, { width: 200, height: 200 });

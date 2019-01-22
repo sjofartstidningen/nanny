@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import sharp from 'sharp';
 import { promisify } from 'util';
 import { resize } from '../image';
 import * as Crop from '../utils/smart-crop';
@@ -8,7 +7,7 @@ import * as Crop from '../utils/smart-crop';
 const readFile = promisify(fs.readFile);
 
 const readImageSource = async (image: string): Promise<Buffer> =>
-  readFile(path.join(__dirname, '../../test/bucket', image));
+  readFile(path.join(__dirname, '../test-utils/bucket', image));
 
 describe('Image.resize', () => {
   it('should preserve file type if args.webp is not defined', async () => {
