@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { Server } from 'http';
+import * as os from 'os';
 import * as path from 'path';
 import S3rver from 's3rver';
 import { promisify } from 'util';
@@ -19,7 +20,7 @@ const createServer = ({
     const instance = new S3rver({
       hostname,
       port,
-      directory: path.join(__dirname, '../.tmp/s3'),
+      directory: path.join(os.tmpdir(), '/s3'),
       silent: true,
       // @ts-ignore: not valid param according to S3rverOptions
       removeBucketsOnClose: true,
@@ -46,6 +47,8 @@ const uploadToBucket = async ({
   const contentType =
     ext === 'pdf'
       ? 'application/pdf'
+      : ext === 'json'
+      ? 'application/json'
       : ext === 'jpg'
       ? 'image/jpeg'
       : ext === 'svg'
