@@ -25,6 +25,13 @@ if (process.env.NODE_ENV === 'test') {
 
 const S3 = new AWS.S3(s3config);
 
+/**
+ * getObject will fetch an object from S3 and return it, together with some
+ * information, as a buffer.
+ *
+ * @param {string} key The identifying key
+ * @returns {Promise<S3File>}
+ */
 const getObject = async (key: string): Promise<S3File> => {
   try {
     const config = {

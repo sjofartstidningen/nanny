@@ -17,26 +17,30 @@ export type Gravity =
   | 'northwest'
   | 'center';
 
+export interface Dimensions {
+  w: number;
+  h: number;
+}
+export interface CropRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  unit: 'pixel' | 'percent';
+}
+
 export interface ResizeArgs {
   w?: number;
   h?: number;
   quality?: number;
-  resize?: { w: number; h: number };
+  resize?: Dimensions;
   crop_strategy?: CropStrategy;
   gravity?: Gravity;
-  fit?: { w: number; h: number };
-  crop?:
-    | boolean
-    | {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-        unit: 'pixel' | 'percent';
-      };
+  fit?: Dimensions;
+  crop?: boolean | CropRect;
   zoom?: number;
   webp?: boolean;
-  lb?: { w: number; h: number };
+  lb?: Dimensions;
   background?: string;
 }
 

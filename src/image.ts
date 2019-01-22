@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { ResizeArgs } from './types';
+import { Dimensions, ResizeArgs } from './types';
 import { clamp } from './utils/fp';
 import { smartCrop } from './utils/smart-crop';
 
@@ -9,6 +9,14 @@ interface ResizeResult {
   original: sharp.Metadata;
 }
 
+/**
+ * Calculate a default compression value based on a logarithmic scale depending
+ * on the zoom
+ *
+ * @param {number} defaultValue Default quality
+ * @param {number} zoom Zoom level
+ * @returns {number} Calculated quality
+ */
 const applyZoomCompression = (defaultValue: number, zoom: number): number =>
   clamp(
     Math.round(
@@ -20,8 +28,15 @@ const applyZoomCompression = (defaultValue: number, zoom: number): number =>
     defaultValue,
   );
 
-const getDimensionsArray = (
-  dimensions: { w: number; h: number },
+/**
+ * calculateDimensions takes the dimensions and applies the zoom value onto them
+ *
+ * @param {Dimensions} dimensions Dimensions
+ * @param {number} [zoom=1] Zoom value
+ * @returns {[number, number]} Dimensions with zoom applied
+ */
+const calculateDimensions = (
+  dimensions: Dimensions,
   zoom: number = 1,
 ): [number, number] => {
   const width = Math.round(dimensions.w * zoom);
@@ -29,6 +44,17 @@ const getDimensionsArray = (
   return [width, height];
 };
 
+/**
+ * resize will take the buffer object from S3 and apply resize, crop and format
+ * onto it before it can be returned to the client.
+ *
+ * A user might supply many different combinations of arguments but this tries
+ * to not apply multiple operations that might conflict with each other
+ *
+ * @param {Buffer} file The buffer object from S3
+ * @param {ResizeArgs} args Arguments parsed from the query string
+ * @returns {Promise<ResizeResult>} Resulting image buffer with additional data
+ */
 const resize = async (
   file: Buffer,
   args: ResizeArgs,
@@ -36,16 +62,24 @@ const resize = async (
   const Image = sharp(file).withMetadata();
   const metadata = await Image.metadata();
 
-  // Auto image rotate based on orientation exif data
+  // Auto rotate image based on orientation exif data
   Image.rotate();
 
   const zoom = args.zoom || 1;
+
+  /**
+   * By default this function will use a quality slightly higher than sharp's
+   * default (80) and also reduce the quality a bit for zoomed up images to
+   * compensate for the bigger size
+   */
   const quality = Math.round(
     clamp(args.quality || applyZoomCompression(82, zoom), 0, 100),
   );
 
   /**
-   * Apply resizing
+   * Apply cropping if args.crop is a CropRect, an object
+   * The crop value can be supplied as either pixels or percentages
+   * It they are supplied as percentages the zoom factor will be applied
    */
   if (typeof args.crop === 'object') {
     const extractRegion =
@@ -67,29 +101,31 @@ const resize = async (
   }
 
   if (args.resize) {
-    const [width, height] = getDimensionsArray(args.resize, zoom);
+    /**
+     * Query param "resize" can be used to force an image into a specific box.
+     * The values are passed as a comma separated tuple (?resize=100,200).
+     * Aspect ration will be kept
+     *
+     * The params "gravity" or "crop_strategy" can be used to control where to
+     * put focus while cropping – default is center gravity
+     *
+     * @see src/types.js for information about which values are accepted as
+     * gravity or strategy.
+     */
+    const [width, height] = calculateDimensions(args.resize, zoom);
 
     if (args.gravity) {
       // @ts-ignore
       Image.crop(args.gravity);
-    }
-
-    if (args.crop_strategy === 'attention') {
+    } else if (args.crop_strategy === 'attention') {
       // @ts-ignore
       Image.crop(sharp.strategy.attention);
-    }
-
-    if (args.crop_strategy === 'entropy') {
+    } else if (args.crop_strategy === 'entropy') {
       // @ts-ignore
       Image.crop(sharp.strategy.entropy);
-    }
-
-    if (args.crop_strategy === 'smart') {
-      const intendedDimensions = getDimensionsArray(args.resize);
-      const smartRegion = await smartCrop(file, {
-        width: intendedDimensions[0],
-        height: intendedDimensions[1],
-      });
+    } else if (args.crop_strategy === 'smart') {
+      const [w, h] = calculateDimensions(args.resize);
+      const smartRegion = await smartCrop(file, { width: w, height: h });
 
       Image.extract({
         left: smartRegion.x,
@@ -101,12 +137,24 @@ const resize = async (
 
     Image.resize(width, height);
   } else if (args.fit) {
-    const [width, height] = getDimensionsArray(args.fit, zoom);
+    /**
+     * Query parameter fit will take the dimensions and scale the image but make
+     * it fit into the resulting rect while still keeping aspect ratio
+     */
+    const [width, height] = calculateDimensions(args.fit, zoom);
     Image.resize(width, height);
     // @ts-ignore
     Image.max();
   } else if (args.lb) {
-    const [width, height] = getDimensionsArray(args.lb, zoom);
+    /**
+     * Query parameter lb (or letter-box) will take the image, scale it to fit
+     * inside the dimensions while keeping the aspect ration. It will then apply
+     * a background color to the whitespace around the image.
+     *
+     * By default the backgorund will be black – but any hex value can be passed
+     * to add another type of color – remember to escape the `#` to `%23`.
+     */
+    const [width, height] = calculateDimensions(args.lb, zoom);
     Image.resize(width, height);
 
     // @ts-ignore
@@ -114,15 +162,23 @@ const resize = async (
     // @ts-ignore
     Image.embed();
   } else if (args.w || args.h) {
+    /**
+     * Use query parameters w or h to scale the image to a specified width or
+     * height while keeping aspect ratio.
+     *
+     * Both together, without param crop, will work as query param
+     * resize. If crop = true it will work as param fit.
+     */
     Image.resize(args.w ? args.w * zoom : null, args.h ? args.h * zoom : null);
     // @ts-ignore
     if (!args.crop) Image.max();
   }
 
   /**
-   * Set the final format of the image and set quality
+   * Finally set the output format of the image and set quality.
    * If args.webp is true then all images becomes webp. Otherwise everything
-   * will be set to its initial format, except gif and svg which will become png
+   * will be set to its initial format, except gif and svg which will become
+   * png.
    */
   if (args.webp || metadata.format === 'webp') {
     Image.webp({ quality });
