@@ -1,10 +1,23 @@
+const bucket = 'handler-bucket';
+const hostname = 'localhost';
+const port = 4578;
+
+process.env.S3_BUCKET = bucket;
+process.env.S3_HOSTNAME = hostname;
+process.env.S3_PORT = `${port}`;
+
 import {
   mockApiGatewayEvent,
   mockLambdaContext,
 } from '../__fixtures__/aws-lambda';
 import { processImage } from '../handler';
+import { createScope } from '../test-utils/s3-server';
 
-describe('handler: processImage', () => {
+const scope = createScope({ hostname, port, bucket });
+beforeAll(() => scope.init());
+afterAll(() => scope.teardown());
+
+describe.skip('handler: processImage', () => {
   it('should return a APIProxyEvent', async () => {
     const event = mockApiGatewayEvent({ path: '/image.jpg' });
     const context = mockLambdaContext();

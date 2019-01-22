@@ -9,7 +9,7 @@ interface Config {
 }
 
 const createResponse = (
-  body: string | object | Buffer,
+  body: Body,
   { statusCode = 200, cache = true, contentType }: Config = {},
 ): APIGatewayProxyResult => {
   const isBuffer = Buffer.isBuffer(body);
