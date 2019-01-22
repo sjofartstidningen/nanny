@@ -18,7 +18,9 @@ if (process.env.NODE_ENV === 'test') {
     endpoint: `http://${process.env.S3_HOSTNAME}:${process.env.S3_PORT}`,
   };
 } else {
-  s3config = {};
+  s3config = {
+    region: getEnv('AWS_REGION'),
+  };
 }
 
 const S3 = new AWS.S3(s3config);
@@ -31,17 +33,16 @@ const getObject = async (key: string): Promise<S3File> => {
     };
 
     const data = await S3.getObject(config).promise();
-
-    if (data.Body == null || !Buffer.isBuffer(data.Body)) {
-      throw new createError.Forbidden(
-        `Forbidden to access anything other than binary files. You tried to access ${key}`,
+    if (!Buffer.isBuffer(data.Body)) {
+      throw new createError.InternalServerError(
+        'Body returned from S3 is not of type Buffer',
       );
     }
 
-    const body = data.Body;
+    const file = data.Body;
     const info = { contentType: data.ContentType };
 
-    return { file: body, info };
+    return { file, info };
   } catch (error) {
     throw createError(error.statusCode, error.message);
   }
