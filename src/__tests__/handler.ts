@@ -6,6 +6,7 @@ process.env.S3_BUCKET = bucket;
 process.env.S3_HOSTNAME = hostname;
 process.env.S3_PORT = `${port}`;
 
+import sharp from 'sharp';
 import {
   mockApiGatewayEvent,
   mockLambdaContext,
@@ -17,13 +18,36 @@ const scope = createScope({ hostname, port, bucket });
 beforeAll(() => scope.init());
 afterAll(() => scope.teardown());
 
-describe.skip('handler: processImage', () => {
-  it('should return a APIProxyEvent', async () => {
-    const event = mockApiGatewayEvent({ path: '/image.jpg' });
+describe('handler: processImage', () => {
+  it('should transform an image before returning it', async () => {
+    const event = mockApiGatewayEvent({
+      path: '/image.jpg',
+      queryStringParameters: { w: '100' },
+    });
     const context = mockLambdaContext();
+
+    const result = await processImage(event, context);
+    expect(result).toHaveProperty('body');
+
+    const file = Buffer.from(result.body, 'base64');
+    const metadata = await sharp(file).metadata();
+    expect(metadata).toHaveProperty('width', 100);
+  });
+
+  it('should return an image in webp format if supported and FORCE_WEBP=true', async () => {
+    process.env.FORCE_WEBP = 'true';
+    const event = mockApiGatewayEvent({
+      path: '/image.jpg',
+      queryStringParameters: { w: '100' },
+      headers: { Accept: 'image/webp,image/apng,image/*,*/*;q=0.8' }, // Crome default for image requests
+    });
+    const context = mockLambdaContext();
+
     const result = await processImage(event, context);
 
-    expect(JSON.parse(result.body)).toHaveProperty('message', 'Hello world');
+    const file = Buffer.from(result.body, 'base64');
+    const metadata = await sharp(file).metadata();
+    expect(metadata).toHaveProperty('format', 'webp');
   });
 
   it('should throw an error if trying to access root level', async () => {
