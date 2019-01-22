@@ -8075,6 +8075,18 @@ slice-ansi@0.0.4:
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
   integrity sha1-7b+JA/ZvfOL46v1s7tZeJkyDGzU=
 
+smartcrop-sharp@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/smartcrop-sharp/-/smartcrop-sharp-2.0.3.tgz#1845e098fe38769ba04dcf9de65148a5da75dc2c"
+  integrity sha512-MZHImAELtI7KkzaXm3dL11hkkE8Ix0BTKzdV4zxaClcS7C+HAuh4BieGM9EJ/JkDzQ9F8rR04pNMB5uevFVOJg==
+  dependencies:
+    smartcrop "^2.0.2"
+
+smartcrop@^2.0.2:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/smartcrop/-/smartcrop-2.0.3.tgz#067aa8af6ebe0954e818f4cdce28a3f87579873e"
+  integrity sha512-EXkHPLf24H6KrYwCnUY+Y9ll+OPmFjmGc7wxiTfuUXt+WBXGTYR3qN5F3Df1Pk0TF/3rHCtOmPLQrvQ+QQOBWQ==
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/snapdragon-node/-/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
