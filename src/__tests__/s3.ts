@@ -21,6 +21,16 @@ describe('S3.getObject', () => {
     expect(res.info.contentType).toEqual('image/jpeg');
   });
 
+  it('should handle any type of object', async () => {
+    await Promise.all(
+      ['document.pdf', 'data.json'].map(async key => {
+        const file = await await getObject(key);
+        expect(Buffer.isBuffer(file.file)).toBeTruthy();
+        expect(file.info.contentType).toMatch(/application\/\w+/);
+      }),
+    );
+  });
+
   it('should throw NotFound error if file is not found', async () => {
     await expect(getObject('no-image.jpg')).rejects.toThrow(NotFound);
   });
