@@ -14,8 +14,10 @@
     "test": "jest --env=node"
   },
   "dependencies": {
+    "animated-gif-detector": "^1.2.0",
     "aws-sdk": "^2.391.0",
     "http-errors": "^1.7.1",
+    "mime-types": "^2.1.21",
     "ramda": "^0.26.1",
     "sharp": "^0.21.3",
     "smartcrop-sharp": "^2.0.3"
@@ -24,6 +26,7 @@
     "@types/aws-lambda": "^8.10.17",
     "@types/http-errors": "^1.6.1",
     "@types/jest": "^23.3.13",
+    "@types/mime-types": "^2.1.0",
     "@types/ramda": "^0.25.47",
     "@types/s3rver": "^0.0.30",
     "@types/sharp": "^0.21.1",
