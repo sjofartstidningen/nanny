@@ -114,15 +114,13 @@ const resize = async (
      */
     const [width, height] = calculateDimensions(args.resize, zoom);
 
+    const options: sharp.ResizeOptions = {};
     if (args.gravity) {
-      // @ts-ignore
-      Image.crop(args.gravity);
+      options.position = args.gravity;
     } else if (args.crop_strategy === 'attention') {
-      // @ts-ignore
-      Image.crop(sharp.strategy.attention);
+      options.position = sharp.strategy.attention;
     } else if (args.crop_strategy === 'entropy') {
-      // @ts-ignore
-      Image.crop(sharp.strategy.entropy);
+      options.position = sharp.strategy.entropy;
     } else if (args.crop_strategy === 'smart') {
       const [w, h] = calculateDimensions(args.resize);
       const smartRegion = await smartCrop(file, { width: w, height: h });
@@ -135,16 +133,14 @@ const resize = async (
       });
     }
 
-    Image.resize(width, height);
+    Image.resize(width, height, options);
   } else if (args.fit) {
     /**
      * Query parameter fit will take the dimensions and scale the image but make
      * it fit into the resulting rect while still keeping aspect ratio
      */
     const [width, height] = calculateDimensions(args.fit, zoom);
-    Image.resize(width, height);
-    // @ts-ignore
-    Image.max();
+    Image.resize(width, height, { fit: 'inside' });
   } else if (args.lb) {
     /**
      * Query parameter lb (or letter-box) will take the image, scale it to fit
@@ -155,12 +151,10 @@ const resize = async (
      * to add another type of color – remember to escape the `#` to `%23`.
      */
     const [width, height] = calculateDimensions(args.lb, zoom);
-    Image.resize(width, height);
-
-    // @ts-ignore
-    Image.background(args.background || 'black');
-    // @ts-ignore
-    Image.embed();
+    Image.resize(width, height, {
+      fit: 'contain',
+      background: args.background || 'black',
+    });
   } else if (args.w || args.h) {
     /**
      * Use query parameters w or h to scale the image to a specified width or
@@ -169,9 +163,11 @@ const resize = async (
      * Both together, without param crop, will work as query param
      * resize. If crop = true it will work as param fit.
      */
-    Image.resize(args.w ? args.w * zoom : null, args.h ? args.h * zoom : null);
-    // @ts-ignore
-    if (!args.crop) Image.max();
+    Image.resize(
+      args.w ? args.w * zoom : null,
+      args.h ? args.h * zoom : null,
+      !args.crop ? { fit: 'inside' } : undefined,
+    );
   }
 
   /**
