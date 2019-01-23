@@ -43,6 +43,21 @@ const anyPass = <T>(predicate: PredicateFunction<T>, items: T[]): boolean => {
 };
 
 /**
+ * capitalize every word in a string. It will split words by anything that is
+ * not a word charachter (\W in reg exp). This means that something like
+ * "content-type" => "Content-Type" and "hello world" => "Hello World".
+ *
+ * @param {string} str String to capitalize
+ * @returns {string} Capitalized string
+ */
+const capitalize = (str: string): string => {
+  return str.replace(/\w+/g, substring => {
+    const [init, ...rest] = substring;
+    return `${init.toUpperCase()}${rest.join('')}`;
+  });
+};
+
+/**
  * clamp constrains a number between min and max
  *
  * @param {number} val
@@ -70,4 +85,4 @@ const isEmpty = (o: object): boolean => {
   return Object.keys(o).length < 1;
 };
 
-export { allPass, anyPass, clamp, isEmpty };
+export { allPass, anyPass, capitalize, clamp, isEmpty };

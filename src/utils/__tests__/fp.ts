@@ -1,4 +1,4 @@
-import { allPass, anyPass, clamp, isEmpty } from '../fp';
+import { allPass, anyPass, capitalize, clamp, isEmpty } from '../fp';
 
 const isNumber = (x: any) => typeof x === 'number';
 
@@ -32,7 +32,15 @@ describe('util: fp.anyPass', () => {
   });
 });
 
-describe('util: fs.clam', () => {
+describe('util: fp.capitalize', () => {
+  it('should capitalize every word in a string', () => {
+    expect(capitalize('foo')).toEqual('Foo');
+    expect(capitalize('hello world')).toEqual('Hello World');
+    expect(capitalize('content-type')).toEqual('Content-Type');
+  });
+});
+
+describe('util: fp.clamp', () => {
   it('should clamp a value between min and max', () => {
     expect(clamp(5, 0, 10)).toEqual(5);
     expect(clamp(11, 0, 10)).toEqual(10);
