@@ -12,10 +12,10 @@ interface S3File {
 const S3_BUCKET = getEnv('S3_BUCKET');
 let s3config: AWS.S3.ClientConfiguration;
 
-if (process.env.NODE_ENV === 'test') {
+if (getEnv('NODE_ENV', 'development') !== 'production') {
   s3config = {
     s3ForcePathStyle: true,
-    endpoint: `http://${process.env.S3_HOSTNAME}:${process.env.S3_PORT}`,
+    endpoint: `http://${getEnv('S3_HOSTNAME')}:${getEnv('S3_PORT')}`,
   };
 } else {
   s3config = {

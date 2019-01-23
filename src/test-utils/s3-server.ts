@@ -55,8 +55,7 @@ const uploadToBucket = async ({
   }).promise();
 };
 
-const populateBucket = async (bucket: string) => {
-  const bucketDir = path.join(__dirname, './bucket');
+const populateBucket = async (bucket: string, bucketDir: string) => {
   const files = await readdir(bucketDir);
   await Promise.all(
     files.map(key => {
@@ -77,16 +76,22 @@ const createScope = ({
 }) => {
   let server: Server;
 
-  const init = async (): Promise<void> => {
+  const init = async (populate = true): Promise<void> => {
     server = await createServer({ hostname, port });
     await S3.createBucket({ Bucket: bucket }).promise();
-    await populateBucket(bucket);
+    if (populate) {
+      await populateBucket(bucket, path.join(__dirname, './bucket'));
+    }
   };
 
   const teardown = (): Promise<void> =>
     new Promise(resolve => server.close(resolve));
 
-  return { init, teardown };
+  return {
+    init,
+    teardown,
+    populate: (dir: string) => populateBucket(bucket, dir),
+  };
 };
 
 export { createScope };
