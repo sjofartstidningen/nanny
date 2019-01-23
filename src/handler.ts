@@ -68,7 +68,7 @@ async function processImage(
      * will force the image to be transformed into webp which often will mean
      * great size reductions
      */
-    if (getEnv('FORCE_WEBP', false)) {
+    if (resizeArgs.webp == null && getEnv('FORCE_WEBP', false)) {
       resizeArgs.webp = supportsWebp(event.headers);
     }
 

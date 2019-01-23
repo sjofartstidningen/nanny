@@ -55,6 +55,21 @@ describe.only('handler: processImage', () => {
     process.env.FORCE_WEBP = undefined;
   });
 
+  it('should ignore FORCE_WEBP and Accept-header if webp is declared in query string', async () => {
+    process.env.FORCE_WEBP = 'true';
+
+    const event = mockApiGatewayEvent({
+      path: '/image.jpg',
+      queryStringParameters: { webp: 'false' },
+      headers: { Accept: 'image/webp,image/apng,image/*,*/*;q=0.8' }, // Crome default for image requests
+    });
+    const context = mockLambdaContext();
+
+    const result = await processImage(event, context);
+    expect(result.headers).toHaveProperty('Content-Type', 'image/jpeg');
+    process.env.FORCE_WEBP = undefined;
+  });
+
   it('should throw an error if trying to access root level', async () => {
     const event = mockApiGatewayEvent({ path: '/' });
     const context = mockLambdaContext();
