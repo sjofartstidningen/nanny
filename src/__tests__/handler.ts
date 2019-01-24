@@ -18,7 +18,7 @@ const scope = createScope({ hostname, port, bucket });
 beforeAll(() => scope.init());
 afterAll(() => scope.teardown());
 
-describe.only('handler: processImage', () => {
+describe('handler: processImage', () => {
   it('should transform an image before returning it', async () => {
     const event = mockApiGatewayEvent({
       path: '/image.jpg',
