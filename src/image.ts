@@ -91,10 +91,12 @@ const resize = async (
             height: args.crop.h,
           }
         : {
-            left: (metadata.width as number) * (args.crop.x / 100),
-            top: (metadata.height as number) * (args.crop.y / 100),
-            width: (metadata.width as number) * (args.crop.w / 100),
-            height: (metadata.height as number) * (args.crop.h / 100),
+            left: Math.round((metadata.width as number) * (args.crop.x / 100)),
+            top: Math.round((metadata.height as number) * (args.crop.y / 100)),
+            width: Math.round((metadata.width as number) * (args.crop.w / 100)),
+            height: Math.round(
+              (metadata.height as number) * (args.crop.h / 100),
+            ),
           };
 
     Image.extract(extractRegion);
