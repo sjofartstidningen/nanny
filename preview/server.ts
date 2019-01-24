@@ -141,7 +141,7 @@ async function main() {
   try {
     destroyS3 = await setupS3({
       bucket: process.env.S3_BUCKET,
-      folder: join(process.cwd(), 'example/bucket'),
+      folder: join(process.cwd(), 'preview/bucket'),
       port: Number.parseInt(process.env.S3_PORT, 10),
       hostname: process.env.S3_HOSTNAME,
     });
