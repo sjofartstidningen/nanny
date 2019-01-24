@@ -1,0 +1,29 @@
+.ui.bottom.attached.tab.segment(data-tab='standard')
+  h3.ui.header Standard
+
+  .ui.segment
+    form#standard-form.ui.form
+      h4.ui.dividing.header Settings
+      .two.fields
+        .field
+          label(for='standard-w')
+            | Width 
+            code (w=&lt;number&gt;)
+          .field
+            input#standard-w(type='number', name='w', value='')
+        .field
+          label(for='standard-h')
+            | Height 
+            code (h=&lt;number&gt;)
+          .field
+            input#standard-h(type='number', name='h', value='')
+      
+      .field
+        .ui.checkbox
+          input.hidden(id=name + '-crop', type='checkbox', name='crop' tabindex='0', value='true')
+          label(for=name + '-crop')
+            | Crop 
+            code (crop=&lt;boolean&gt;)
+            
+      +settings('standard')
+  +image('standard')

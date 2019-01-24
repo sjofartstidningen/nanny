@@ -1,0 +1,36 @@
+mixin settings(name)
+  h4.ui.dividing.header General settings
+  .two.fields
+    .field
+      label(for=name + '-zoom')
+        | Zoom 
+        code (zoom=&lt;number&gt;)
+      .field
+        input(id=name + '-zoom', type='number', name='zoom', min='1', max='5', step='0.5', value='')
+    .field
+      label(for=name + '-quality')
+        | Quality 
+        code (quality=&lt;number&gt;)
+      .field
+        input(id=name + '-zoom', type='number', name='quality', min='0', max='100', value='')
+
+  .two.fields
+    .field
+      .ui.checkbox
+        input.hidden(id=name + '-webp', type='checkbox', name='webp', tabindex='0', value='true')
+        label(for=name + '-webp')
+          | Use WebP 
+          code (webp=&lt;true|false|1|0&gt;)
+
+    .field
+      button.ui.button.compact.grey.right.floated(id=name + '-clear', type='button')
+        | Clear
+
+mixin image(name)
+  .ui.segment
+    img.ui.image(id=name + '-image', alt='TT Nanny')
+    .ui.message
+      p
+        strong URL: 
+        span(id=name + '-url')
+  
