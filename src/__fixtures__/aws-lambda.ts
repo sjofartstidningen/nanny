@@ -67,10 +67,10 @@ const mockLambdaContext = (): Context => ({
   awsRequestId: 'awsRequestId',
   logGroupName: 'logGroupName',
   logStreamName: 'logStreamName',
-  getRemainingTimeInMillis: jest.fn(() => Math.floor(Math.random() * 10_000)),
-  done: jest.fn(),
-  fail: jest.fn(),
-  succeed: jest.fn(),
+  getRemainingTimeInMillis: () => Math.floor(Math.random() * 10_000),
+  done: () => null,
+  fail: () => null,
+  succeed: () => null,
 });
 
 export { mockApiGatewayEvent, mockLambdaContext };
