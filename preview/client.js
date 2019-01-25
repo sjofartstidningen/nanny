@@ -63,7 +63,7 @@ function createHandler(tabName) {
 
     const url = `${BASE_URL}${queryString ? '?' : ''}${queryString}`;
     view.$image.prop('src', url.replace('#', '%23'));
-    view.$url.text(url);
+    view.$url.text(url.replace(BASE_URL, '/'));
   }
 
   const onClear = event => {
