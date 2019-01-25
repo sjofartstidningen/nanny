@@ -2,23 +2,29 @@ import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 
 const toMultipart = <Value>(obj: {
   [key: string]: Value;
-}): { [key: string]: Value[] } =>
-  Object.entries(obj).reduce((o, [key, val]) => ({ ...o, [key]: [val] }), {});
+}): { [key: string]: Value[] } => {
+  return Object.entries(obj).reduce(
+    (o, [key, val]) => ({ ...o, [key]: [val] }),
+    {},
+  );
+};
 
 const defaultHeaders = { Accept: 'application/json' };
 const defaultQueryStringParameters = { foo: 'bar' };
 
-const mockApiGatewayEvent = ({
-  body = JSON.stringify({ message: 'hello world' }),
-  path = '/path/to/resource',
-  headers = defaultHeaders,
-  queryStringParameters = defaultQueryStringParameters,
-}: {
-  body?: string;
+interface MockEventConfig {
+  body?: string | null;
   path?: string;
   headers?: { [key: string]: string };
   queryStringParameters?: { [key: string]: string };
-} = {}): APIGatewayProxyEvent => ({
+}
+
+const mockApiGatewayEvent = ({
+  body = null,
+  path = '/path/to/resource',
+  headers = defaultHeaders,
+  queryStringParameters = defaultQueryStringParameters,
+}: MockEventConfig = {}): APIGatewayProxyEvent => ({
   body,
   path,
   headers,
