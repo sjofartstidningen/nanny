@@ -7,22 +7,31 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(http-equiv='X-UA-Compatible', content='ie=edge')
     title Preview
-    link(rel='stylesheet', type='text/css', href='https://unpkg.com/semantic-ui@2.4.2/dist/semantic.min.css')
+    link(
+      rel='stylesheet',
+      type='text/css',
+      href='https://unpkg.com/semantic-ui@2.4.2/dist/semantic.min.css'
+    )
   body
-    .ui.container(style="margin-top: 1rem;")
-      .ui.top.attached.tabular.menu
-        a.item(data-tab='standard') Standard
-        a.item(data-tab='resize') Resize
-        a.item(data-tab='fit') Fit
-        a.item(data-tab='lb') Letterbox
-        a.item(data-tab='crop') Crop
+    - var tabs = ['standard', 'resize', 'fit', 'lb', 'crop'];
 
-      include tabs/standard.pug
-      include tabs/resize.pug
-      include tabs/fit.pug
-      include tabs/lb.pug
-      include tabs/crop.pug
+    .ui.container(style='margin-top: 1rem')
+      .ui.secondary.pointing.menu.stackable
+        .header.item Nanny
+        each tab in tabs
+          a.item(data-tab=tab) #{tab}
 
-    script(src='https://code.jquery.com/jquery-3.1.1.min.js', integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=', crossorigin='anonymous')
+    .ui.container(style='margin-top: 1rem')
+      each tab in tabs
+        .ui.tab(data-tab=tab)
+          +section(tab)
+
+    //- .ui.container(style="margin-top: 1rem;")
+
+    script(
+      src='https://code.jquery.com/jquery-3.1.1.min.js',
+      integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=',
+      crossorigin='anonymous',
+    )
     script(src='https://unpkg.com/semantic-ui@2.4.2/dist/semantic.min.js')
     script(src='./client.js')

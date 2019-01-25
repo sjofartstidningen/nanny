@@ -1,52 +1,41 @@
-.ui.bottom.attached.tab.segment(data-tab='resize')
-  h3.ui.header Resize
+mixin resize
+  .field
+    label.ui(for='resize-resize-width')
+      | Resize
+      code (resize=&lt;width&gt;,&lt;height&gt;)
 
-  .ui.segment
-    form#resize-form.ui.form
-      h4.ui.dividing.header Settings
+  .two.fields
+    .field
+      .ui.labeled.input
+        label.ui.label(for='resize-resize-width') width
+        input#resize-resize-width(type='number', name='resize[0]', value='300')
+    .field
+      .ui.labeled.input
+        label.ui.label(for='resize-resize-height') height
+        input#resize-resize-height(type='number', name='resize[1]', value='300')
 
-      .field
-        label.ui(for='resize-resize-width')
-          | Resize
-          code (resize=&lt;width&gt;,&lt;height&gt;)
-
-      .two.fields
-        .field
-          .ui.labeled.input
-            label.ui.label(for='resize-resize-width') width
-            input#resize-resize-width(type='number', name='resize[0]', value='300')
-        .field
-          .ui.labeled.input
-            label.ui.label(for='resize-resize-height') height
-            input#resize-resize-height(type='number', name='resize[1]', value='300')
-
-      .two.fields
-        .field
-          label(for='resize-crop_strategy')
-            | Crop Strategy
-            code (crop_strategy=&lt;string&gt;)
-          .field
-            select.ui.fluid.dropdown#resize-crop_strategy(name='crop_strategy')
-              option(value='') -
-              option(value='attention') Attention
-              option(value='entropy') Entropy
-              option(value='smart') Smart
-        .field
-          label(for='resize-gravity')
-            | Gravity
-            code (gravity=&lt;string&gt;)
-          .field
-            select.ui.fluid.dropdown#resize-gravity(name='gravity')
-              option(value='') -
-              option(value='north') North
-              option(value='northeast') Northeast
-              option(value='east') East
-              option(value='southeast') Southeast
-              option(value='south') South
-              option(value='southwest') Southwest
-              option(value='west') West
-              option(value='northwest') Northwest
-              option(value='center') Center
-      
-      +settings('resize')
-  +image('resize')
+  .two.fields
+    .field
+      label(for='resize-crop_strategy')
+        | Crop Strategy
+        code (crop_strategy=&lt;string&gt;)
+      select.ui.fluid.dropdown#resize-crop_strategy(name='crop_strategy')
+        option(value='') -
+        option(value='attention') Attention
+        option(value='entropy') Entropy
+        option(value='smart') Smart
+    .field
+      label(for='resize-gravity')
+        | Gravity
+        code (gravity=&lt;string&gt;)
+      select.ui.fluid.dropdown#resize-gravity(name='gravity')
+        option(value='') -
+        option(value='north') North
+        option(value='northeast') Northeast
+        option(value='east') East
+        option(value='southeast') Southeast
+        option(value='south') South
+        option(value='southwest') Southwest
+        option(value='west') West
+        option(value='northwest') Northwest
+        option(value='center') Center

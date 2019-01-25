@@ -1,23 +1,14 @@
-.ui.bottom.attached.tab.segment(data-tab='fit')
-  h3.ui.header Fit
-
-  .ui.segment
-    form#fit-form.ui.form
-      h4.ui.dividing.header Settings
-
-      .field
-        label.ui(for='fit-fit-width')
-          | Fit
-          code (fit=&lt;width&gt;,&lt;height&gt;)
-      .two.fields
-        .field
-          .ui.labeled.input
-            label.ui.label(for='fit-fit-width') width
-            input#fit-fit-width(type='number', name='fit[0]', value='300')
-        .field
-          .ui.labeled.input
-            label.ui.label(for='fit-fit-height') height
-            input#fit-fit-height(type='number', name='fit[1]', value='300')
-      
-      +settings('fit')
-  +image('fit')
+mixin fit
+  .field
+    label.ui(for='fit-fit-width')
+      | Fit
+      code (fit=&lt;width&gt;,&lt;height&gt;)
+  .two.fields
+    .field
+      .ui.labeled.input
+        label.ui.label(for='fit-fit-width') width
+        input#fit-fit-width(type='number', name='fit[0]', value='300')
+    .field
+      .ui.labeled.input
+        label.ui.label(for='fit-fit-height') height
+        input#fit-fit-height(type='number', name='fit[1]', value='300')
