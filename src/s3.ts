@@ -1,5 +1,7 @@
 import * as AWS from 'aws-sdk';
 import createError from 'http-errors';
+import * as mime from 'mime-types';
+import { extname } from 'path';
 import { getEnv } from './utils/get-env';
 
 interface S3File {
@@ -47,7 +49,9 @@ const getObject = async (key: string): Promise<S3File> => {
     }
 
     const file = data.Body;
-    const info = { contentType: data.ContentType };
+    const info = {
+      contentType: data.ContentType || mime.lookup(extname(key)) || undefined,
+    };
 
     return { file, info };
   } catch (error) {
