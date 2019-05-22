@@ -21,15 +21,18 @@ provider:
     - Effect: 'Allow'
       Action:
         - 's3:GetObject'
-      Resource: ${env:UPLOADS_BUCKET_ARN}
+      Resource: ${env:S3_BUCKET_ARN}
 
-environment:
-  NODE_ENV: ${self:provider.stage}
-  UPLOADS_BUCKET: ${env:UPLOADS_BUCKET_NAME}
+package:
+  exclude:
+    - node_modules/**
 
 functions:
   processImage:
-    handler: dist/handler.processImage
+    environment:
+      NODE_ENV: ${self:provider.stage}
+      S3_BUCKET: ${env:S3_BUCKET_NAME}
+    handler: dist/index.processImage
     description: Image processing service
     events:
       - http:
