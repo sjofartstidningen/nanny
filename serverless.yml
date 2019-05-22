@@ -1,8 +1,15 @@
 service: nanny
 
+plugins:
+  - serverless-apigw-binary
+  - serverless-apigwy-binary
+
 custom:
   defaultStage: development
   defaultRegion: eu-north-1
+  apigwBinary:
+    types:
+      - 'image/*'
 
 provider:
   name: aws
@@ -28,3 +35,4 @@ functions:
       - http:
           path: '{proxy+}'
           method: get
+          contentHandling: CONVERT_TO_BINARY

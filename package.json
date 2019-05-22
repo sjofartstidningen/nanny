@@ -43,6 +43,8 @@
     "pug": "^2.0.3",
     "s3rver": "^3.1.0",
     "serverless": "^1.36.1",
+    "serverless-apigw-binary": "^0.4.4",
+    "serverless-apigwy-binary": "^1.0.0",
     "ts-jest": "^24.0.2",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
