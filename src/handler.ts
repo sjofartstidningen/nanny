@@ -11,6 +11,7 @@ import * as S3 from './s3';
 import { canProcess } from './utils/can-process';
 import { createResponse } from './utils/create-response';
 import { getEnv } from './utils/get-env';
+import { init as initLogger, logger } from './utils/logger';
 import { parseQuery } from './utils/parse-query';
 import { supportsWebp } from './utils/supports-webp';
 
@@ -44,6 +45,7 @@ async function processImage(
   event: APIGatewayProxyEvent,
   context: Context,
 ): Promise<APIGatewayProxyResult> {
+  initLogger(event, context);
   try {
     // The S3 key is the path part excluding the leading "/"
     const key = event.path.substring(1);
@@ -98,6 +100,10 @@ async function processImage(
      * – return the gif as .mp4.
      */
     if (!canProcess(file, { key, contentType })) {
+      logger.info('Will not process image', {
+        path: key,
+        info: { contentType },
+      });
       return createResponse(file, { contentType });
     }
 
@@ -107,6 +113,8 @@ async function processImage(
      * for the various ways to process the image.
      */
     const { image, info: imageInfo } = await Image.resize(file, resizeArgs);
+    logger.info('Successfully processed image', { path: key, info: imageInfo });
+
     return createResponse(image, {
       contentType: mime.lookup(imageInfo.format) || undefined,
       headers: { Vary: 'Accept' },
@@ -126,6 +134,7 @@ async function processImage(
       }
     }
 
+    logger.error(error.message, { error });
     return createResponse(message, { statusCode, cache: false });
   }
 }
