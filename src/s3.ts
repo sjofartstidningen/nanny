@@ -17,6 +17,8 @@ let s3config: AWS.S3.ClientConfiguration;
 if (getEnv('NODE_ENV', 'development') !== 'production') {
   s3config = {
     s3ForcePathStyle: true,
+    accessKeyId: 'S3RVER',
+    secretAccessKey: 'S3RVER',
     endpoint: `http://${getEnv('S3_HOSTNAME')}:${getEnv('S3_PORT')}`,
   };
 } else {

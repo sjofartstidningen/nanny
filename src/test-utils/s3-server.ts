@@ -78,14 +78,22 @@ const createScope = ({
 
   const init = async (populate = true): Promise<void> => {
     server = await createServer({ hostname, port });
-    await S3.createBucket({ Bucket: bucket }).promise();
-    if (populate) {
-      await populateBucket(bucket, path.join(__dirname, './bucket'));
-    }
+    const { Buckets } = await S3.listBuckets().promise();
+    const hasBucket = Array.isArray(Buckets)
+      ? Buckets.findIndex(b => b.Name === bucket) > -1
+      : false;
+
+    if (!hasBucket) await S3.createBucket({ Bucket: bucket }).promise();
+    if (populate) await populateBucket(bucket, path.join(__dirname, 'bucket'));
   };
 
   const teardown = (): Promise<void> =>
-    new Promise(resolve => server.close(resolve));
+    new Promise(async (resolve, reject) => {
+      server.close(err => {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
 
   return {
     init,
