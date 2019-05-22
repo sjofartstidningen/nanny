@@ -8,10 +8,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "del dist && parcel build src/handler.ts --target node --no-source-maps",
-    "package": "serverless package",
-    "deploy": "serverless deploy",
+    "build": "parcel build src/handler.ts --target node --no-source-maps",
     "test": "jest --env=node",
+    "deploy": "./scripts/deploy.sh",
     "preview:server": "parcel build preview/server.ts --target node && node dist/server.js",
     "preview:client": "parcel serve preview/index.pug"
   },
