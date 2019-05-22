@@ -14,7 +14,7 @@ interface S3File {
 const S3_BUCKET = getEnv('S3_BUCKET');
 let s3config: AWS.S3.ClientConfiguration;
 
-if (getEnv('NODE_ENV', 'development') !== 'production') {
+if (getEnv('NODE_ENV', 'development') === 'test') {
   s3config = {
     s3ForcePathStyle: true,
     accessKeyId: 'S3RVER',

@@ -4,6 +4,7 @@ const serverHostname = 'localhost';
 const s3Port = 4578;
 const s3Bucket = 'example-bucket';
 
+process.env.NODE_ENV = 'test';
 process.env.SERVER_PORT = '3000';
 process.env.SERVER_HOSTNAME = 'localhost';
 process.env.S3_HOSTNAME = 'localhost';
