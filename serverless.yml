@@ -5,20 +5,7 @@ plugins:
   - serverless-apigwy-binary
   - serverless-api-cloudfront
 
-custom:
-  defaultStage: development
-  defaultRegion: eu-north-1
-  apigwBinary:
-    types:
-      - 'image/*'
-  apiCloudFront:
-    domain: images.sjofartstidningen.se
-    certificate: ${env:AWS_CERTIFICATE_ARN}
-    compress: true
-    cookies: none
-    headers:
-      - Accept
-    querystring: all
+custom: ${file(./serverless.config.js)}
 
 provider:
   name: aws

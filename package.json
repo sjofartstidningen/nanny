@@ -14,6 +14,8 @@
     "deploy": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless deploy --stage=$STAGE",
     "predeploy:fn": "docker build -t nanny-deploy .",
     "deploy:fn": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless deploy function -f processImage --stage=${STAGE}",
+    "preremove": "docker build -t nanny-deploy .",
+    "remove": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless remove --stage=${STAGE}",
     "preview:server": "parcel build preview/server.ts --target node && node dist/server.js",
     "preview:client": "parcel serve preview/index.pug"
   },
