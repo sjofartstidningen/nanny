@@ -8,10 +8,14 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "del dist && parcel build src/handler.ts --target node --no-source-maps",
-    "package": "serverless package",
-    "deploy": "serverless deploy",
+    "build": "ncc build src/handler.ts -o dist",
     "test": "jest --env=node",
+    "predeploy": "docker build -t nanny-deploy .",
+    "deploy": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless deploy --stage=$STAGE",
+    "predeploy:fn": "docker build -t nanny-deploy .",
+    "deploy:fn": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless deploy function -f processImage --stage=${STAGE}",
+    "preremove": "docker build -t nanny-deploy .",
+    "remove": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless remove --stage=${STAGE}",
     "preview:server": "parcel build preview/server.ts --target node && node dist/server.js",
     "preview:client": "parcel serve preview/index.pug"
   },
@@ -22,7 +26,8 @@
     "mime-types": "^2.1.21",
     "ramda": "^0.26.1",
     "sharp": "^0.22.1",
-    "smartcrop-sharp": "^2.0.3"
+    "smartcrop-sharp": "^2.0.3",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
@@ -32,9 +37,9 @@
     "@types/ramda": "^0.26.8",
     "@types/s3rver": "^0.0.31",
     "@types/sharp": "^0.22.2",
+    "@zeit/ncc": "^0.18.5",
     "async-exit-hook": "^2.0.1",
     "cz-conventional-changelog": "^2.1.0",
-    "del-cli": "^1.1.0",
     "husky": "^2.3.0",
     "jest": "^24.8.0",
     "lint-staged": "^8.1.0",
@@ -43,6 +48,9 @@
     "pug": "^2.0.3",
     "s3rver": "^3.1.0",
     "serverless": "^1.36.1",
+    "serverless-api-cloudfront": "^0.9.5",
+    "serverless-apigw-binary": "^0.4.4",
+    "serverless-apigwy-binary": "^1.0.0",
     "ts-jest": "^24.0.2",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
