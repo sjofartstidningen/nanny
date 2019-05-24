@@ -52,7 +52,7 @@ const anyPass = <T>(predicate: PredicateFunction<T>, items: T[]): boolean => {
  */
 const capitalize = (str: string): string => {
   return str.replace(/\w+/g, substring => {
-    const [init, ...rest] = substring;
+    const [init, ...rest] = substring.split('');
     return `${init.toUpperCase()}${rest.join('')}`;
   });
 };

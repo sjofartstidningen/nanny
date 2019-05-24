@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 const bucket = 'handler-bucket';
 const hostname = 'localhost';
 const port = 1234;
