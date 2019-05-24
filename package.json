@@ -15,8 +15,7 @@
     "deploy": "yarn run docker ./node_modules/.bin/serverless deploy --stage=$STAGE",
     "deploy:fn": "yarn run docker ./node_modules/.bin/serverless deploy function -f processImage --stage=${STAGE}",
     "remove": "yarn run docker ./node_modules/.bin/serverless remove --stage=${STAGE}",
-    "preview:server": "parcel build preview/server.ts --target node && node dist/server.js",
-    "preview:client": "parcel serve preview/index.pug"
+    "example": "parcel serve example/index.html"
   },
   "dependencies": {
     "animated-gif-detector": "^1.2.0",
@@ -24,6 +23,8 @@
     "http-errors": "^1.7.1",
     "mime-types": "^2.1.21",
     "ramda": "^0.26.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.8.6",
     "sharp": "^0.22.1",
     "smartcrop-sharp": "^2.0.3",
     "winston": "^3.2.1"
@@ -33,12 +34,25 @@
     "@types/http-errors": "^1.6.1",
     "@types/jest": "^24.0.13",
     "@types/mime-types": "^2.1.0",
+    "@types/node": "^12.0.2",
     "@types/ramda": "^0.26.8",
+    "@types/react": "^16.8.18",
+    "@types/react-dom": "^16.8.4",
     "@types/s3rver": "^0.0.31",
     "@types/sharp": "^0.22.2",
+    "@typescript-eslint/eslint-plugin": "1.x",
+    "@typescript-eslint/parser": "1.x",
     "@zeit/ncc": "^0.18.5",
     "async-exit-hook": "^2.0.1",
+    "babel-eslint": "10.x",
     "cz-conventional-changelog": "^2.1.0",
+    "eslint": "5.x",
+    "eslint-config-react-app": "4.0.0",
+    "eslint-plugin-flowtype": "2.x",
+    "eslint-plugin-import": "2.x",
+    "eslint-plugin-jsx-a11y": "6.x",
+    "eslint-plugin-react": "7.x",
+    "eslint-plugin-react-hooks": "1.5.0",
     "husky": "^2.3.0",
     "jest": "^24.8.0",
     "lint-staged": "^8.1.0",
@@ -51,11 +65,7 @@
     "serverless-apigw-binary": "^0.4.4",
     "serverless-apigwy-binary": "^1.0.0",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.12.1",
-    "tslint-config-prettier": "^1.17.0",
-    "tslint-eslint-rules": "^5.4.0",
-    "typescript": "^3.2.4",
-    "typescript-tslint-plugin": "^0.4.0"
+    "typescript": "^3.4.5"
   },
   "config": {
     "commitizen": {
@@ -72,7 +82,7 @@
     "linters": {
       "*.ts": [
         "jest --env=node --passWithNoTests --findRelatedTests",
-        "tslint --fix"
+        "eslint --fix"
       ],
       "*.{js,ts,json,md,yml}": [
         "prettier --write",
@@ -84,5 +94,8 @@
     "singleQuote": true,
     "trailingComma": "all",
     "proseWrap": "always"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }

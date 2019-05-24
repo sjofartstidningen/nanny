@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 const bucket = 'test-bucket';
 const hostname = 'localhost';
 const port = 4578;

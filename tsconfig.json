@@ -1,19 +1,20 @@
 {
   "compilerOptions": {
-    "lib": ["esnext", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2017",
-    "strict": true,
-    "declaration": true,
-    "esModuleInterop": true,
-    "composite": true,
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "skipLibCheck": true,
-    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "preserveWatchOutput": true,
-    "plugins": [{ "name": "typescript-tslint-plugin" }],
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
     "typeRoots": ["./node_modules/@types", "types"]
   },
-  "include": ["src"]
+  "include": ["src", "example"]
 }
