@@ -10,8 +10,8 @@
   "scripts": {
     "build": "ncc build src/handler.ts -o dist",
     "test": "jest --env=node",
-    "predocker": "docker build -t nanny-deploy .",
-    "docker": "docker run -v \"$PWD\":/var/task --env-file .env --env STAGE=${STAGE} nanny-deploy",
+    "predocker": "docker build -t nanny .",
+    "docker": "docker run --env-file .env --env STAGE=${STAGE} nanny",
     "deploy": "yarn run docker ./node_modules/.bin/serverless deploy --stage=$STAGE",
     "deploy:fn": "yarn run docker ./node_modules/.bin/serverless deploy function -f processImage --stage=${STAGE}",
     "remove": "yarn run docker ./node_modules/.bin/serverless remove --stage=${STAGE}",
