@@ -34,4 +34,10 @@ describe('S3.getObject', () => {
   it('should throw NotFound error if file is not found', async () => {
     await expect(getObject('no-image.jpg')).rejects.toThrow(NotFound);
   });
+
+  it('should be able to get files containing special chars', async () => {
+    await expect(getObject('image-åäö.jpg')).resolves.toEqual(
+      expect.anything(),
+    );
+  });
 });
