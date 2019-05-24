@@ -1,6 +1,6 @@
 {
   "name": "@sjofartstidningen/nanny",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "description": "An image processing service compatible with humanmade/tachyon",
   "main": "index.js",
   "repository": "git@github.com:sjofartstidningen/nanny.git",
@@ -10,12 +10,11 @@
   "scripts": {
     "build": "ncc build src/handler.ts -o dist",
     "test": "jest --env=node",
-    "predeploy": "docker build -t nanny-deploy .",
-    "deploy": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless deploy --stage=$STAGE",
-    "predeploy:fn": "docker build -t nanny-deploy .",
-    "deploy:fn": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless deploy function -f processImage --stage=${STAGE}",
-    "preremove": "docker build -t nanny-deploy .",
-    "remove": "docker run --env-file .env --env STAGE=${STAGE} nanny-deploy yarn serverless remove --stage=${STAGE}",
+    "predocker": "docker build -t nanny-deploy .",
+    "docker": "docker run -v \"$PWD\":/var/task --env-file .env --env STAGE=${STAGE} nanny-deploy",
+    "deploy": "yarn run docker ./node_modules/.bin/serverless deploy --stage=$STAGE",
+    "deploy:fn": "yarn run docker ./node_modules/.bin/serverless deploy function -f processImage --stage=${STAGE}",
+    "remove": "yarn run docker ./node_modules/.bin/serverless remove --stage=${STAGE}",
     "preview:server": "parcel build preview/server.ts --target node && node dist/server.js",
     "preview:client": "parcel serve preview/index.pug"
   },
