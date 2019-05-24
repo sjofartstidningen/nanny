@@ -47,8 +47,12 @@ async function processImage(
 ): Promise<APIGatewayProxyResult> {
   initLogger(event, context);
   try {
-    // The S3 key is the path part excluding the leading "/"
-    const key = event.path.substring(1);
+    /**
+     * The S3 key is the path part excluding the leading "/".
+     * The path is also decoded to since the incoming path may contain encoded
+     * charachters.
+     */
+    const key = decodeURI(event.path).substring(1);
     const extension = extname(key)
       .substring(1)
       .toLowerCase();

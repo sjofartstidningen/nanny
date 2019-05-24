@@ -89,4 +89,15 @@ describe('handler: processImage', () => {
       403,
     );
   });
+
+  it('should encode incoming path in order to accept special chars', async () => {
+    const key = encodeURI('/image-åäö.jpg');
+    const event = mockApiGatewayEvent({ path: key });
+    const context = mockLambdaContext();
+
+    await expect(processImage(event, context)).resolves.toHaveProperty(
+      'statusCode',
+      200,
+    );
+  });
 });
