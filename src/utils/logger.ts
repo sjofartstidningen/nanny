@@ -1,8 +1,4 @@
-import {
-  APIGatewayProxyEvent,
-  APIGatewayProxyResult,
-  Context,
-} from 'aws-lambda';
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import winston from 'winston';
 import { getEnv } from './get-env';
 
@@ -17,7 +13,10 @@ const lambda = winston.format(info => {
 const errorJson = winston.format(info => {
   if (info.level === 'error' && info.error) {
     const { error } = info;
-    info.error = { message: error.message || error.toString() };
+    info.error = {
+      message: error.message || error.toString(),
+      stack: error.stack,
+    };
   }
 
   return info;
@@ -31,7 +30,14 @@ const logger = winston.createLogger({
 });
 
 const init = (event: APIGatewayProxyEvent, context: Context) => {
-  if (event) payload.event = event;
+  if (event) {
+    payload.event = {
+      ...(payload.event || {}),
+      path: event.path,
+      headers: event.headers,
+      queryStringParameters: event.queryStringParameters,
+    };
+  }
   if (context) payload.awsRequestId = context.awsRequestId;
 };
 

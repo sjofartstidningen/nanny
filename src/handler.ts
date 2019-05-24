@@ -57,6 +57,8 @@ async function processImage(
       .substring(1)
       .toLowerCase();
 
+    logger.info('Init process', { key, extension });
+
     /**
      * If there's no key or extension the request is malformed and might be an
      * attempt to list the contents of the S3 bucket – this is not allowed.
@@ -70,9 +72,9 @@ async function processImage(
 
     /**
      * If the env variable FORCE_WEBP is set we will use the Accept-header to
-     * determine whether the client supports webp or not. It it supports we
-     * will force the image to be transformed into webp which often will mean
-     * great size reductions
+     * determine whether the client supports webp or not. If it supports we
+     * will force the image to be transformed into webp which often means
+     * a significant size reductions
      */
     if (resizeArgs.webp == null && getEnv('FORCE_WEBP', false)) {
       resizeArgs.webp = supportsWebp(event.headers);
@@ -101,13 +103,10 @@ async function processImage(
      * @note A possible enhancement might be to look into using ffmpeg to
      * process animated gifs and either preserve the gif format or –
      * [if the browser supports it](https://calendar.perfplanet.com/2017/animated-gif-without-the-gif/)
-     * – return the gif as .mp4.
+     * – return the gif as a mp4.
      */
     if (!canProcess(file, { key, contentType })) {
-      logger.info('Will not process image', {
-        path: key,
-        info: { contentType },
-      });
+      logger.info('Ignore', { path: key, info: { contentType } });
       return createResponse(file, { contentType });
     }
 
@@ -115,14 +114,22 @@ async function processImage(
      * This is the heavy part of this handler. It will take the file-buffer and
      * resize it according to the query string parameters – see documentation
      * for the various ways to process the image.
+     *
+     * But we are also a bit generous here taking the decision that if the
+     * processing should fail it's better to send the image anyway, untouched.
      */
-    const { image, info: imageInfo } = await Image.resize(file, resizeArgs);
-    logger.info('Successfully processed image', { path: key, info: imageInfo });
+    try {
+      const { image, info: imageInfo } = await Image.resize(file, resizeArgs);
 
-    return createResponse(image, {
-      contentType: mime.lookup(imageInfo.format) || undefined,
-      headers: { Vary: 'Accept' },
-    });
+      logger.info('Success', { path: key, info: imageInfo });
+      return createResponse(image, {
+        contentType: mime.lookup(imageInfo.format) || undefined,
+        headers: { Vary: 'Accept' },
+      });
+    } catch (error) {
+      logger.error('Failure, passing thru', { error });
+      return createResponse(file, { contentType });
+    }
   } catch (error) {
     let statusCode: number;
     let message: string;
@@ -138,7 +145,7 @@ async function processImage(
       }
     }
 
-    logger.error(error.message, { error });
+    logger.error('Failure, error response', { error });
     return createResponse(message, { statusCode, cache: false });
   }
 }
