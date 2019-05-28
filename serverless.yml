@@ -30,6 +30,7 @@ functions:
     environment:
       NODE_ENV: ${self:provider.stage}
       S3_BUCKET: ${env:S3_BUCKET_NAME}
+      FORCE_WEBP: true
     handler: dist/index.processImage
     description: Image processing service
     events:
