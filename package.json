@@ -15,7 +15,7 @@
     "deploy": "yarn run docker ./node_modules/.bin/serverless deploy --stage=$STAGE",
     "deploy:fn": "yarn run docker ./node_modules/.bin/serverless deploy function -f processImage --stage=${STAGE}",
     "remove": "yarn run docker ./node_modules/.bin/serverless remove --stage=${STAGE}",
-    "example": "parcel serve example/index.html"
+    "example": "parcel serve preview/index.pug"
   },
   "dependencies": {
     "animated-gif-detector": "^1.2.0",
@@ -23,8 +23,6 @@
     "http-errors": "^1.7.1",
     "mime-types": "^2.1.21",
     "ramda": "^0.26.1",
-    "react": "^16.0.0",
-    "react-dom": "^16.8.6",
     "sharp": "^0.22.1",
     "smartcrop-sharp": "^2.0.3",
     "winston": "^3.2.1"
@@ -36,8 +34,6 @@
     "@types/mime-types": "^2.1.0",
     "@types/node": "^12.0.2",
     "@types/ramda": "^0.26.8",
-    "@types/react": "^16.8.18",
-    "@types/react-dom": "^16.8.4",
     "@types/s3rver": "^0.0.31",
     "@types/sharp": "^0.22.2",
     "@typescript-eslint/eslint-plugin": "1.x",
