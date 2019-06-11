@@ -8,13 +8,12 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "ncc build src/handler.ts -o dist",
+    "prebuild": "rm -rf dist",
+    "build": "ncc build src/handler.ts -o dist --external aws-sdk",
     "test": "jest --env=node",
-    "predocker": "docker build -t nanny .",
-    "docker": "docker run --env-file .env --env STAGE=${STAGE} nanny",
-    "deploy": "yarn run docker ./node_modules/.bin/serverless deploy --stage=$STAGE",
-    "deploy:fn": "yarn run docker ./node_modules/.bin/serverless deploy function -f processImage --stage=${STAGE}",
-    "remove": "yarn run docker ./node_modules/.bin/serverless remove --stage=${STAGE}",
+    "deploy": "lambi --env-file .env --env STAGE=${STAGE} 'yarn run build && serverless deploy'",
+    "deploy:fn": "lambi --env-file .env --env STAGE=${STAGE} 'yarn run build && serverless deploy -f processImage'",
+    "remove": "lambi --env-file .env --env STAGE=${STAGE} 'serverless remove --stage=${STAGE}'",
     "example": "parcel serve preview/index.pug"
   },
   "dependencies": {
@@ -28,6 +27,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@fransvilhelm/lambi": "^1.1.0",
     "@types/aws-lambda": "^8.10.17",
     "@types/http-errors": "^1.6.1",
     "@types/jest": "^24.0.13",
