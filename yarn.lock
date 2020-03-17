@@ -985,10 +985,10 @@
     resolve-from "^5.0.0"
     resolve-global "^1.0.0"
 
-"@fransvilhelm/lambi@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@fransvilhelm/lambi/-/lambi-1.1.0.tgz#cdd0604dd3b1485cebc1ded913ff582c475064d4"
-  integrity sha512-7xF1tcshrVVzzHQr81uGbXQRvwrPy17oFwob0dS7LaU6k51AWKc/pizr/qax3B8Whigwg65NjK0ZjCdwGHL6mA==
+"@fransvilhelm/lambi@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@fransvilhelm/lambi/-/lambi-2.0.0.tgz#1e8d5f844cfc968e669ea9c3bd3f0130f8d86979"
+  integrity sha512-Rk6DcwgRGne06RK9F4VvieAzZ57ePEg4Ac/gR0sl07mmhZ47RitNRzPQAsEBBQhrrhO+l52EvssmTBAkPvr3tw==
   dependencies:
     execa "^1.0.0"
     listr "^0.14.3"

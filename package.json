@@ -30,7 +30,7 @@
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@babel/preset-typescript": "^7.8.3",
-    "@fransvilhelm/lambi": "^1.1.0",
+    "@fransvilhelm/lambi": "^2.0.0",
     "@testing-library/jest-dom": "^5.1.1",
     "@testing-library/react": "^10.0.1",
     "@types/aws-lambda": "^8.10.46",
