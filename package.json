@@ -62,7 +62,6 @@
     "parcel-bundler": "^1.12.4",
     "prettier": "^1.19.1",
     "pug": "^2.0.4",
-    "s3rver": "^3.1.0",
     "serverless": "^1.66.0",
     "serverless-api-cloudfront": "^0.9.5",
     "serverless-apigw-binary": "^0.4.4",

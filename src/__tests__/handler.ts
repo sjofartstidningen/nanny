@@ -1,23 +1,11 @@
-/* eslint-disable import/first */
-const bucket = 'handler-bucket';
-const hostname = 'localhost';
-const port = 1234;
-
-process.env.S3_BUCKET = bucket;
-process.env.S3_HOSTNAME = hostname;
-process.env.S3_PORT = `${port}`;
-
 import sharp from 'sharp';
 import {
   mockApiGatewayEvent,
   mockLambdaContext,
 } from '../__fixtures__/aws-lambda';
 import { processImage } from '../handler';
-import { createScope } from '../test-utils/s3-server';
 
-const scope = createScope({ hostname, port, bucket });
-beforeAll(() => scope.init());
-afterAll(() => scope.teardown());
+jest.mock('../s3');
 
 describe('handler: processImage', () => {
   it('should transform an image before returning it', async () => {
@@ -75,20 +63,16 @@ describe('handler: processImage', () => {
     const event = mockApiGatewayEvent({ path: '/' });
     const context = mockLambdaContext();
 
-    await expect(processImage(event, context)).resolves.toHaveProperty(
-      'statusCode',
-      403,
-    );
+    const result = await processImage(event, context);
+    expect(result).toHaveProperty('statusCode', 403);
   });
 
   it('should throw an error if trying to access folder', async () => {
     const event = mockApiGatewayEvent({ path: '/path/to/folder' });
     const context = mockLambdaContext();
 
-    await expect(processImage(event, context)).resolves.toHaveProperty(
-      'statusCode',
-      403,
-    );
+    const result = await processImage(event, context);
+    expect(result).toHaveProperty('statusCode', 403);
   });
 
   it('should encode incoming path in order to accept special chars', async () => {
@@ -96,9 +80,7 @@ describe('handler: processImage', () => {
     const event = mockApiGatewayEvent({ path: key });
     const context = mockLambdaContext();
 
-    await expect(processImage(event, context)).resolves.toHaveProperty(
-      'statusCode',
-      200,
-    );
+    const result = await processImage(event, context);
+    expect(result).toHaveProperty('statusCode', 200);
   });
 });
