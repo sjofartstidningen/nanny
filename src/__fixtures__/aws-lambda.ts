@@ -73,7 +73,7 @@ const mockLambdaContext = (): Context => ({
   awsRequestId: 'awsRequestId',
   logGroupName: 'logGroupName',
   logStreamName: 'logStreamName',
-  getRemainingTimeInMillis: () => Math.floor(Math.random() * 10_000),
+  getRemainingTimeInMillis: () => Math.floor(Math.random() * 10000),
   done: () => null,
   fail: () => null,
   succeed: () => null,
