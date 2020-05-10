@@ -11,6 +11,8 @@
     "prebuild": "rm -rf dist",
     "build": "ncc build src/handler.ts -o dist --external aws-sdk",
     "test": "jest",
+    "lint": "eslint src",
+    "type-check": "tsc --noEmit",
     "deploy": "lambi --env-file .env --env STAGE=${STAGE} 'yarn run build && serverless deploy'",
     "deploy:fn": "lambi --env-file .env --env STAGE=${STAGE} 'yarn run build && serverless deploy -f processImage'",
     "remove": "lambi --env-file .env --env STAGE=${STAGE} 'serverless remove --stage=${STAGE}'",
