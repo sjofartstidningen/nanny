@@ -1,7 +1,7 @@
 import {
   APIGatewayProxyEvent,
-  APIGatewayProxyResult,
   Context,
+  APIGatewayProxyCallback,
 } from 'aws-lambda';
 import { Forbidden, HttpError } from 'http-errors';
 import * as mime from 'mime-types';
@@ -44,7 +44,8 @@ import { supportsWebp } from './utils/supports-webp';
 async function processImage(
   event: APIGatewayProxyEvent,
   context: Context,
-): Promise<APIGatewayProxyResult> {
+  callback: APIGatewayProxyCallback,
+): Promise<void> {
   initLogger(event, context);
   try {
     /**
@@ -53,9 +54,7 @@ async function processImage(
      * charachters.
      */
     const key = decodeURI(event.path).substring(1);
-    const extension = extname(key)
-      .substring(1)
-      .toLowerCase();
+    const extension = extname(key).substring(1).toLowerCase();
 
     logger.info('Init process', { key, extension });
 
@@ -107,7 +106,7 @@ async function processImage(
      */
     if (!canProcess(file, { key, contentType })) {
       logger.info('Ignore', { path: key, info: { contentType } });
-      return createResponse(file, { contentType });
+      return callback(null, createResponse(file, { contentType }));
     }
 
     /**
@@ -122,13 +121,16 @@ async function processImage(
       const { image, info: imageInfo } = await Image.resize(file, resizeArgs);
 
       logger.info('Success', { path: key, info: imageInfo });
-      return createResponse(image, {
-        contentType: mime.lookup(imageInfo.format) || undefined,
-        headers: { Vary: 'Accept' },
-      });
+      return callback(
+        null,
+        createResponse(image, {
+          contentType: mime.lookup(imageInfo.format) || undefined,
+          headers: { Vary: 'Accept' },
+        }),
+      );
     } catch (error) {
       logger.error('Failure, passing thru', { error });
-      return createResponse(file, { contentType });
+      return callback(null, createResponse(file, { contentType }));
     }
   } catch (error) {
     let statusCode: number;
@@ -146,7 +148,10 @@ async function processImage(
     }
 
     logger.error('Failure, error response', { error });
-    return createResponse(message, { statusCode, cache: false });
+    return callback(
+      null,
+      createResponse(message, { statusCode, cache: false }),
+    );
   }
 }
 
