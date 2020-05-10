@@ -15,7 +15,10 @@ describe('handler: processImage', () => {
     });
     const context = mockLambdaContext();
 
-    const result = await processImage(event, context);
+    const callback = jest.fn();
+    await processImage(event, context, callback);
+    const result = callback.mock.calls[0][1];
+
     expect(result).toHaveProperty('body');
     expect(result.headers).toHaveProperty('Content-Type', 'image/jpeg');
 
@@ -34,7 +37,10 @@ describe('handler: processImage', () => {
     });
     const context = mockLambdaContext();
 
-    const result = await processImage(event, context);
+    const callback = jest.fn();
+    await processImage(event, context, callback);
+    const result = callback.mock.calls[0][1];
+
     expect(result.headers).toHaveProperty('Content-Type', 'image/webp');
 
     const file = Buffer.from(result.body, 'base64');
@@ -54,7 +60,10 @@ describe('handler: processImage', () => {
     });
     const context = mockLambdaContext();
 
-    const result = await processImage(event, context);
+    const callback = jest.fn();
+    await processImage(event, context, callback);
+    const result = callback.mock.calls[0][1];
+
     expect(result.headers).toHaveProperty('Content-Type', 'image/jpeg');
     process.env.FORCE_WEBP = undefined;
   });
@@ -63,7 +72,10 @@ describe('handler: processImage', () => {
     const event = mockApiGatewayEvent({ path: '/' });
     const context = mockLambdaContext();
 
-    const result = await processImage(event, context);
+    const callback = jest.fn();
+    await processImage(event, context, callback);
+    const result = callback.mock.calls[0][1];
+
     expect(result).toHaveProperty('statusCode', 403);
   });
 
@@ -71,7 +83,10 @@ describe('handler: processImage', () => {
     const event = mockApiGatewayEvent({ path: '/path/to/folder' });
     const context = mockLambdaContext();
 
-    const result = await processImage(event, context);
+    const callback = jest.fn();
+    await processImage(event, context, callback);
+    const result = callback.mock.calls[0][1];
+
     expect(result).toHaveProperty('statusCode', 403);
   });
 
@@ -80,7 +95,10 @@ describe('handler: processImage', () => {
     const event = mockApiGatewayEvent({ path: key });
     const context = mockLambdaContext();
 
-    const result = await processImage(event, context);
+    const callback = jest.fn();
+    await processImage(event, context, callback);
+    const result = callback.mock.calls[0][1];
+
     expect(result).toHaveProperty('statusCode', 200);
   });
 });
