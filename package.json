@@ -24,7 +24,7 @@
     "http-errors": "^1.7.3",
     "mime-types": "^2.1.27",
     "ramda": "^0.27.0",
-    "sharp": "^0.25.2",
+    "sharp": "^0.30.5",
     "smartcrop-sharp": "^2.0.3",
     "winston": "^3.2.1"
   },
