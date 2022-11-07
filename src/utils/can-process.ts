@@ -25,10 +25,7 @@ const allowedMimeTypes = [
  * @param {{ key: string; contentType?: string }} { contentType, key }
  * @returns {boolean}
  */
-const canProcess = (
-  file: Buffer,
-  { contentType, key }: { key: string; contentType?: string },
-): boolean => {
+const canProcess = (file: Buffer, { contentType, key }: { key: string; contentType?: string }): boolean => {
   const type = contentType || mime.lookup(extname(key));
   if (!allowedMimeTypes.includes(type)) return false;
   if (type === allowedMimeTypes[2] && isAnimated(file)) return false;

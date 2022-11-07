@@ -1,6 +1,6 @@
 import _fs from 'fs';
-import path from 'path';
 import mime from 'mime-types';
+import path from 'path';
 
 const fs = _fs.promises;
 const bucketPath = path.join(__dirname, '../test-utils/bucket');

@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
+
 import { resize } from '../image';
 import * as Crop from '../utils/smart-crop';
 
@@ -12,9 +13,7 @@ const readImageSource = async (image: string): Promise<Buffer> => {
   const fromCache = cache.get(image);
   if (fromCache) return fromCache;
 
-  const buffer = await readFile(
-    path.join(__dirname, '../test-utils/bucket', image),
-  );
+  const buffer = await readFile(path.join(__dirname, '../test-utils/bucket', image));
 
   cache.set(image, buffer);
   return buffer;
@@ -43,22 +42,14 @@ describe('Image.resize', () => {
     const file = await readImageSource('image.jpg');
     const { info, original } = await resize(file, { w: 100 });
     expect(info.width).toEqual(100);
-    expect(info.height).toBe(
-      Math.round(
-        (100 / (original.width as number)) * (original.height as number),
-      ),
-    );
+    expect(info.height).toBe(Math.round((100 / (original.width as number)) * (original.height as number)));
   });
 
   it('should handle ?h=100', async () => {
     const file = await readImageSource('image.jpg');
     const { info, original } = await resize(file, { h: 100 });
     expect(info.height).toEqual(100);
-    expect(info.width).toBe(
-      Math.round(
-        (100 / (original.height as number)) * (original.width as number),
-      ),
-    );
+    expect(info.width).toBe(Math.round((100 / (original.height as number)) * (original.width as number)));
   });
 
   it('should handle ?w=100&h=100', async () => {
@@ -163,9 +154,7 @@ describe('Image.resize', () => {
     const { info, original } = await resize(file, { fit: { w: 300, h: 300 } });
 
     expect(info.width).toEqual(300);
-    expect(info.height).toBeCloseTo(
-      (original.height as number) * (300 / (original.width as number)),
-    );
+    expect(info.height).toBeCloseTo((original.height as number) * (300 / (original.width as number)));
   });
 
   it('should handle ?lb=300,300', async () => {

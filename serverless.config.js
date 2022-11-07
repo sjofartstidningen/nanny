@@ -5,24 +5,13 @@ module.exports = (sls) => {
 
   const stage = process.env.STAGE || process.env.NODE_ENV || 'development';
   const cloudFrontDomain =
-    stage === 'production'
-      ? 'images.sjofartstidningen.se'
-      : `${stage}.images.sjofartstidningen.se`;
+    stage === 'production' ? 'images.sjofartstidningen.se' : `${stage}.images.sjofartstidningen.se`;
 
   return {
     defaultStage: stage,
     defaultRegion: 'eu-north-1',
     apigwBinary: {
-      types: [
-        '*/*',
-        'image/*',
-        'image/apng',
-        'image/gif',
-        'image/jpeg',
-        'image/png',
-        'image/svg+xml',
-        'image/webp',
-      ],
+      types: ['*/*', 'image/*', 'image/apng', 'image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp'],
     },
     apiCloudFront: {
       domain: cloudFrontDomain,

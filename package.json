@@ -16,7 +16,8 @@
     "deploy": "lambi --env-file .env --env STAGE=${STAGE} 'yarn run build && serverless deploy'",
     "deploy:fn": "lambi --env-file .env --env STAGE=${STAGE} 'yarn run build && serverless deploy -f processImage'",
     "remove": "lambi --env-file .env --env STAGE=${STAGE} 'serverless remove --stage=${STAGE}'",
-    "example": "parcel serve preview/index.pug"
+    "example": "parcel serve preview/index.pug",
+    "prepare": "husky install"
   },
   "dependencies": {
     "animated-gif-detector": "^1.2.0",
@@ -29,10 +30,8 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "@babel/preset-typescript": "^7.9.0",
     "@fransvilhelm/lambi": "^2.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^3.4.0",
     "@types/aws-lambda": "^8.10.51",
     "@types/http-errors": "^1.6.3",
     "@types/jest": "^25.2.1",
@@ -41,41 +40,22 @@
     "@types/ramda": "^0.27.4",
     "@types/s3rver": "^0.0.32",
     "@types/sharp": "^0.25.0",
-    "@typescript-eslint/eslint-plugin": "2.31.0",
-    "@typescript-eslint/parser": "2.31.0",
     "@zeit/ncc": "^0.22.1",
-    "babel-eslint": "10.1.0",
-    "cz-conventional-changelog": "^3.2.0",
-    "eslint": "7.0.0",
-    "eslint-config-react-app": "5.2.1",
-    "eslint-plugin-flowtype": "4.7.0",
-    "eslint-plugin-import": "2.20.2",
-    "eslint-plugin-jsx-a11y": "6.2.3",
-    "eslint-plugin-react": "7.19.0",
-    "eslint-plugin-react-hooks": "4.0.0",
-    "husky": "^4.2.5",
+    "eslint": "^8.27.0",
+    "eslint-config-react-app": "^7.0.1",
+    "husky": "^8.0.1",
     "jest": "^26.0.1",
-    "lint-staged": "^10.2.2",
-    "prettier": "^2.0.5",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
     "serverless": "^1.70.0",
     "serverless-api-cloudfront": "^0.9.5",
     "serverless-apigw-binary": "^0.4.4",
     "serverless-apigwy-binary": "^1.0.0",
     "typescript": "^3.8.3"
   },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
-      "eslint --fix"
+      "eslint --cache --fix"
     ],
     "*.{js,ts,jsx,tsx,json,md,yml,html}": [
       "prettier --write"
@@ -84,7 +64,16 @@
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all",
-    "proseWrap": "always"
+    "proseWrap": "always",
+    "printWidth": 120,
+    "importOrder": [
+      "^node:(.*)$",
+      "<THIRD_PARTY_MODULES>",
+      "^~(.*)$",
+      "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
   },
   "eslintConfig": {
     "extends": "react-app"

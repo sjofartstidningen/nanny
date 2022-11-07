@@ -20,8 +20,5 @@ declare module 'smartcrop-sharp' {
     };
   }
 
-  export function crop(
-    file: Buffer,
-    options: SmartcropOptions,
-  ): Promise<SmartcropResult>;
+  export function crop(file: Buffer, options: SmartcropOptions): Promise<SmartcropResult>;
 }

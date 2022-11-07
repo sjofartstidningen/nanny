@@ -2,6 +2,7 @@ import * as AWS from 'aws-sdk';
 import createError from 'http-errors';
 import * as mime from 'mime-types';
 import { extname } from 'path';
+
 import { getEnv } from './utils/get-env';
 
 interface S3File {
@@ -45,9 +46,7 @@ const getObject = async (key: string): Promise<S3File> => {
 
     const data = await S3.getObject(config).promise();
     if (!Buffer.isBuffer(data.Body)) {
-      throw new createError.InternalServerError(
-        'Body returned from S3 is not of type Buffer',
-      );
+      throw new createError.InternalServerError('Body returned from S3 is not of type Buffer');
     }
 
     const file = data.Body;

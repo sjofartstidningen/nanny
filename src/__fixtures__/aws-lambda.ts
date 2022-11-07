@@ -1,12 +1,7 @@
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 
-const toMultipart = <Value>(obj: {
-  [key: string]: Value;
-}): { [key: string]: Value[] } => {
-  return Object.entries(obj).reduce(
-    (o, [key, val]) => ({ ...o, [key]: [val] }),
-    {},
-  );
+const toMultipart = <Value>(obj: { [key: string]: Value }): { [key: string]: Value[] } => {
+  return Object.entries(obj).reduce((o, [key, val]) => ({ ...o, [key]: [val] }), {});
 };
 
 const defaultHeaders = { Accept: 'application/json' };

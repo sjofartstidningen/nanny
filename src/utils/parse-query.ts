@@ -1,20 +1,14 @@
 import { BadRequest } from 'http-errors';
 import { evolve } from 'ramda';
-import {
-  CropRect,
-  CropStrategy,
-  Dimensions,
-  Gravity,
-  QueryArgs,
-  ResizeArgs,
-} from '../types';
+
+import { CropRect, CropStrategy, Dimensions, Gravity, QueryArgs, ResizeArgs } from '../types';
 import { anyPass } from './fp';
 
 const identity = <R>(x: R) => x;
 const int = (s: string): number => Number.parseInt(s, 10);
 const isNaN = (n: number): boolean => Number.isNaN(n);
 
-const anyIsNull = (l: any[]) => anyPass(v => v == null, l);
+const anyIsNull = (l: any[]) => anyPass((v) => v == null, l);
 const anyIsNaN = (l: number[]) => anyPass(Number.isNaN, l);
 
 /**
@@ -23,12 +17,13 @@ const anyIsNaN = (l: number[]) => anyPass(Number.isNaN, l);
  * @param {string} key
  * @returns {(val: string) => number} A function to format the query value
  */
-const parseInteger = (key: string) => (val: string): number => {
-  const num = int(val);
-  if (isNaN(num))
-    throw new Error(`Parameter "${key}" is not a number. Supplied: ${val}`);
-  return num;
-};
+const parseInteger =
+  (key: string) =>
+  (val: string): number => {
+    const num = int(val);
+    if (isNaN(num)) throw new Error(`Parameter "${key}" is not a number. Supplied: ${val}`);
+    return num;
+  };
 
 /**
  * parseFloating transforms a stringified number into float "1.5" -> 1.5
@@ -36,14 +31,16 @@ const parseInteger = (key: string) => (val: string): number => {
  * @param {string} key
  * @returns {(val: string) => number} A function to format the query value
  */
-const parseFloating = (key: string) => (val: string): number => {
-  const num = Number.parseFloat(val);
-  if (isNaN(num)) {
-    throw new Error(`Parameter "${key}" is not a number. Supplied: ${val}`);
-  }
+const parseFloating =
+  (key: string) =>
+  (val: string): number => {
+    const num = Number.parseFloat(val);
+    if (isNaN(num)) {
+      throw new Error(`Parameter "${key}" is not a number. Supplied: ${val}`);
+    }
 
-  return num;
-};
+    return num;
+  };
 
 /**
  * parseTuple transforms a comma separated list of two values into an object of
@@ -52,16 +49,16 @@ const parseFloating = (key: string) => (val: string): number => {
  * @param {string} key
  * @returns {(val: string) => Dimensions} A function to format the query value
  */
-const parseTuple = (key: string) => (val: string): Dimensions => {
-  const [w, h] = val.split(',');
-  if (anyIsNull([w, h]) || anyIsNaN([int(w), int(h)])) {
-    throw new Error(
-      `Parameter "${key}" must be a comma separated list (<width>,<height>). Supplied: ${val}`,
-    );
-  }
+const parseTuple =
+  (key: string) =>
+  (val: string): Dimensions => {
+    const [w, h] = val.split(',');
+    if (anyIsNull([w, h]) || anyIsNaN([int(w), int(h)])) {
+      throw new Error(`Parameter "${key}" must be a comma separated list (<width>,<height>). Supplied: ${val}`);
+    }
 
-  return { w: int(w), h: int(h) };
-};
+    return { w: int(w), h: int(h) };
+  };
 
 /**
  * parseBoolean transforms an expected boolean string into an actual boolean. It
@@ -71,14 +68,16 @@ const parseTuple = (key: string) => (val: string): Dimensions => {
  * @param {string} key
  * @returns {(val: string) => boolean} A function to format the query value
  */
-const parseBoolean = (key: string) => (val: string): boolean => {
-  if (val === 'true' || val === '1') return true;
-  if (val === 'false' || val === '0') return false;
+const parseBoolean =
+  (key: string) =>
+  (val: string): boolean => {
+    if (val === 'true' || val === '1') return true;
+    if (val === 'false' || val === '0') return false;
 
-  throw new Error(
-    `Parameter "${key}" is not valid as a boolean value. Must be either true (or 1) or false (or 0). Supplied: ${val}`,
-  );
-};
+    throw new Error(
+      `Parameter "${key}" is not valid as a boolean value. Must be either true (or 1) or false (or 0). Supplied: ${val}`,
+    );
+  };
 
 /**
  * parseCrop handles one specific property – crop
@@ -90,23 +89,25 @@ const parseBoolean = (key: string) => (val: string): boolean => {
  * @param {string} key
  * @returns {(val: string) => boolean | CropRect} A function to format the query value
  */
-const parseCrop = (key: string) => (val: string): boolean | CropRect => {
-  try {
-    const ret = parseBoolean(key)(val);
-    return ret;
-  } catch (error) {
-    const cropValues = val.split(',').map(int);
+const parseCrop =
+  (key: string) =>
+  (val: string): boolean | CropRect => {
+    try {
+      const ret = parseBoolean(key)(val);
+      return ret;
+    } catch (error) {
+      const cropValues = val.split(',').map(int);
 
-    if (cropValues.length < 4 || anyIsNaN(cropValues)) {
-      throw new Error(
-        `Parameter "${key}" must be a comma separated list of pixel or percent values (<x>,<y>,<width>,<height>) or a boolean value. Supplied: ${val}`,
-      );
+      if (cropValues.length < 4 || anyIsNaN(cropValues)) {
+        throw new Error(
+          `Parameter "${key}" must be a comma separated list of pixel or percent values (<x>,<y>,<width>,<height>) or a boolean value. Supplied: ${val}`,
+        );
+      }
+
+      const [x, y, w, h] = cropValues;
+      return { x, y, w, h, unit: val.includes('px') ? 'pixel' : 'percent' };
     }
-
-    const [x, y, w, h] = cropValues;
-    return { x, y, w, h, unit: val.includes('px') ? 'pixel' : 'percent' };
-  }
-};
+  };
 
 /**
  * parseEnum takes a list of acceptable values and checks if the provided value
@@ -117,19 +118,15 @@ const parseCrop = (key: string) => (val: string): boolean | CropRect => {
  * @param {T[]} validEntries
  * @returns {(val: T) => T} A function to format the query value
  */
-const parseEnum = <T extends string>(key: string, validEntries: T[]) => (
-  val: T,
-): T => {
-  if (!validEntries.includes(val)) {
-    throw new Error(
-      `Parameter "${key}" must be one of ${validEntries.join(
-        ', ',
-      )}. Supplied: ${val}`,
-    );
-  }
+const parseEnum =
+  <T extends string>(key: string, validEntries: T[]) =>
+  (val: T): T => {
+    if (!validEntries.includes(val)) {
+      throw new Error(`Parameter "${key}" must be one of ${validEntries.join(', ')}. Supplied: ${val}`);
+    }
 
-  return val;
-};
+    return val;
+  };
 
 /**
  * This object contains functions to map a queryStringParameters object into a
@@ -148,11 +145,7 @@ const evolver = {
   lb: parseTuple('lb'),
   crop: parseCrop('crop'),
   webp: parseBoolean('webp'),
-  crop_strategy: parseEnum<CropStrategy>('crop_strategy', [
-    'smart',
-    'entropy',
-    'attention',
-  ]),
+  crop_strategy: parseEnum<CropStrategy>('crop_strategy', ['smart', 'entropy', 'attention']),
   gravity: parseEnum<Gravity>('gravity', [
     'north',
     'northeast',
@@ -188,9 +181,7 @@ const parseQuery = (query: QueryArgs): ResizeArgs => {
   try {
     return evolve(evolver, query);
   } catch (error) {
-    throw new BadRequest(
-      `Query parameters not valid. Reason: ${error.message}`,
-    );
+    throw new BadRequest(`Query parameters not valid. Reason: ${error.message}`);
   }
 };
 

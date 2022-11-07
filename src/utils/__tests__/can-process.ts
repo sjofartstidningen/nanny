@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as mime from 'mime-types';
 import * as path from 'path';
 import { promisify } from 'util';
+
 import { canProcess } from '../can-process';
 
 const readFile = promisify(fs.readFile);
