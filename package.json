@@ -82,5 +82,8 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "volta": {
+    "node": "16.18.1"
   }
 }
