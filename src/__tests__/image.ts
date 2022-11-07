@@ -133,7 +133,7 @@ describe('Image.resize', () => {
     expect(info.height).toEqual(200);
   });
 
-  it('should handle ?resize=300,200&crop_strategy=attention', async () => {
+  it('should handle ?resize=300,200&crop_strategy=smart', async () => {
     const file = await readImageSource('image.jpg');
     const spy = jest.spyOn(Crop, 'smartCrop');
 

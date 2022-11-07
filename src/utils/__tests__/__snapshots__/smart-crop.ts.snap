@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Util: smartCrop should intelligently choose area to extract from image based on expected width and height 1`] = `
-Object {
+{
   "height": 480,
-  "score": Object {
+  "score": {
     "boost": 0,
-    "detail": 11.89461581469785,
-    "saturation": 135.4092092158066,
+    "detail": 5.894118501477973,
+    "saturation": 134.93480204310322,
     "skin": 0,
-    "total": 0.00024291754279358264,
+    "total": 0.00022388159034127683,
   },
   "width": 480,
   "x": 75,
