@@ -1,4 +1,5 @@
 service: nanny
+frameworkVersion: '3'
 
 plugins:
   - serverless-apigw-binary
