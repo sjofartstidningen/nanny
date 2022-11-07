@@ -31,7 +31,7 @@ jobs:
         run: yarn build
 
       - name: deploy staging
-        run: yarn serverless deploy -f processImage
+        run: yarn serverless deploy
         env:
           STAGE: staging
           S3_BUCKET_ARN: ${{ secrets.S3_BUCKET_ARN }}
