@@ -138,7 +138,7 @@ async function processImage(
     } else {
       statusCode = 500;
       message = 'Internal server error';
-      if (getEnv('NODE_ENV', 'development') !== 'production') {
+      if (getEnv('NODE_ENV', 'development') !== 'production' && error instanceof Error) {
         message += `: ${error.message}`;
       }
     }

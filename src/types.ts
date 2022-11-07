@@ -45,7 +45,7 @@ export interface ResizeArgs {
 }
 
 export interface QueryArgs {
-  [key: string]: string;
+  [key: string]: string | undefined;
 }
 
 export enum AllowedExtensions {

@@ -181,7 +181,12 @@ const parseQuery = (query: QueryArgs): ResizeArgs => {
   try {
     return evolve(evolver, query);
   } catch (error) {
-    throw new BadRequest(`Query parameters not valid. Reason: ${error.message}`);
+    let message = '<unknown>';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    throw new BadRequest(`Query parameters not valid. Reason: ${message}`);
   }
 };
 

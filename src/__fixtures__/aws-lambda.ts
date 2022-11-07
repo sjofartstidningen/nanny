@@ -51,6 +51,7 @@ const mockApiGatewayEvent = ({
       userAgent: 'Custom User Agent String',
       user: null,
       principalOrgId: null,
+      clientCert: null,
     },
     path: '/prod/path/to/resource',
     resourcePath: '/{proxy+}',
