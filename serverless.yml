@@ -4,11 +4,11 @@ frameworkVersion: '3'
 plugins:
   - serverless-api-cloudfront
 
-params:
-  default:
-    domain: ${sls:stage}.images.sjofartstidningen.se
-  prod:
-    domain: images.sjofartstidningen.se
+# params:
+#   default:
+#     domain: ${sls:stage}.images.sjofartstidningen.se
+#   prod:
+#     domain: images.sjofartstidningen.se
 
 custom:
   defaultStage: staging

@@ -31,7 +31,7 @@ jobs:
         run: yarn build
 
       - name: deploy staging
-        run: yarn serverless deploy
+        run: yarn serverless deploy --param="domain=staging.images.sjofartstidningen.se"
         env:
           STAGE: staging
           S3_BUCKET_ARN: ${{ secrets.S3_BUCKET_ARN }}
