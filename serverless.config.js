@@ -10,9 +10,6 @@ module.exports = (sls) => {
   return {
     defaultStage: stage,
     defaultRegion: 'eu-north-1',
-    apigwBinary: {
-      types: ['*/*', 'image/*', 'image/apng', 'image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp'],
-    },
     apiCloudFront: {
       domain: cloudFrontDomain,
       certificate: process.env.AWS_CERTIFICATE_ARN,

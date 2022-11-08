@@ -2,8 +2,6 @@ service: nanny
 frameworkVersion: '2'
 
 plugins:
-  - serverless-apigw-binary
-  - serverless-apigwy-binary
   - serverless-api-cloudfront
 
 custom: ${file(./serverless.config.js)}
@@ -19,6 +17,17 @@ provider:
       Action:
         - 's3:GetObject'
       Resource: ${env:S3_BUCKET_ARN}
+
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
+      - 'image/*'
+      - 'image/apng'
+      - 'image/gif'
+      - 'image/jpeg'
+      - 'image/png'
+      - 'image/svg+xml'
+      - 'image/webp'
 
 package:
   exclude:
@@ -38,4 +47,3 @@ functions:
       - http:
           path: '{proxy+}'
           method: get
-          contentHandling: CONVERT_TO_BINARY
