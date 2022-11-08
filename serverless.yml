@@ -1,7 +1,5 @@
 service: nanny
-frameworkVersion: '2'
-
-variablesResolutionMode: 20210326
+frameworkVersion: '3'
 
 plugins:
   - serverless-api-cloudfront
@@ -29,7 +27,6 @@ provider:
   runtime: nodejs16.x
   stage: ${opt:stage, self:custom.defaultStage}
   region: ${opt:region, self:custom.defaultRegion}
-  lambdaHashingVersion: 20200924
 
   iamRoleStatements:
     - Effect: 'Allow'
