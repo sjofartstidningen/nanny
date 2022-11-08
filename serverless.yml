@@ -4,17 +4,11 @@ frameworkVersion: '3'
 plugins:
   - serverless-api-cloudfront
 
-# params:
-#   default:
-#     domain: ${sls:stage}.images.sjofartstidningen.se
-#   prod:
-#     domain: images.sjofartstidningen.se
-
 custom:
   defaultStage: staging
   defaultRegion: 'eu-north-1'
   apiCloudFront:
-    domain: ${params:domain}
+    domain: ${env:DOMAIN}
     certificate: ${env:AWS_CERTIFICATE_ARN}
     compress: true
     cookies: 'none'
