@@ -1,5 +1,5 @@
 interface Headers {
-  [header: string]: string;
+  [header: string]: string | undefined;
 }
 
 /**

@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+
 import { Dimensions, ResizeArgs } from './types';
 import { clamp } from './utils/fp';
 import { smartCrop } from './utils/smart-crop';
@@ -19,11 +20,7 @@ interface ResizeResult {
  */
 const applyZoomCompression = (defaultValue: number, zoom: number): number =>
   clamp(
-    Math.round(
-      defaultValue -
-        (Math.log(zoom) / Math.log(defaultValue / zoom)) *
-          (defaultValue * zoom),
-    ),
+    Math.round(defaultValue - (Math.log(zoom) / Math.log(defaultValue / zoom)) * (defaultValue * zoom)),
     Math.round(defaultValue / zoom),
     defaultValue,
   );
@@ -35,10 +32,7 @@ const applyZoomCompression = (defaultValue: number, zoom: number): number =>
  * @param {number} [zoom=1] Zoom value
  * @returns {[number, number]} Dimensions with zoom applied
  */
-const calculateDimensions = (
-  dimensions: Dimensions,
-  zoom: number = 1,
-): [number, number] => {
+const calculateDimensions = (dimensions: Dimensions, zoom: number = 1): [number, number] => {
   const width = Math.round(dimensions.w * zoom);
   const height = Math.round(dimensions.h * zoom);
   return [width, height];
@@ -55,10 +49,7 @@ const calculateDimensions = (
  * @param {ResizeArgs} args Arguments parsed from the query string
  * @returns {Promise<ResizeResult>} Resulting image buffer with additional data
  */
-const resize = async (
-  file: Buffer,
-  args: ResizeArgs,
-): Promise<ResizeResult> => {
+const resize = async (file: Buffer, args: ResizeArgs): Promise<ResizeResult> => {
   const Image = sharp(file).withMetadata();
   const metadata = await Image.metadata();
 
@@ -72,9 +63,7 @@ const resize = async (
    * default (80) and also reduce the quality a bit for zoomed up images to
    * compensate for the bigger size
    */
-  const quality = Math.round(
-    clamp(args.quality || applyZoomCompression(82, zoom), 0, 100),
-  );
+  const quality = Math.round(clamp(args.quality || applyZoomCompression(82, zoom), 0, 100));
 
   /**
    * Apply cropping if args.crop is a CropRect, an object
@@ -94,9 +83,7 @@ const resize = async (
             left: Math.round((metadata.width as number) * (args.crop.x / 100)),
             top: Math.round((metadata.height as number) * (args.crop.y / 100)),
             width: Math.round((metadata.width as number) * (args.crop.w / 100)),
-            height: Math.round(
-              (metadata.height as number) * (args.crop.h / 100),
-            ),
+            height: Math.round((metadata.height as number) * (args.crop.h / 100)),
           };
 
     Image.extract(extractRegion);

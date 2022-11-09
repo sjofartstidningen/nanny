@@ -20,8 +20,8 @@ typings/
 # Serverless output
 .serverless
 
-# Parcel cache
-.cache
+# ESLint cache
+.eslintcache
 
 # Temporary directory for local S3 mock
 .tmp

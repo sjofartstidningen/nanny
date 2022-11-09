@@ -6,43 +6,31 @@ on:
 
 jobs:
   integration:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     name: Deploy
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: '12.x'
-
-      - name: get yarn cache directory
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: get yarn cache
-        uses: actions/cache@v1
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          node-version: '16.x'
+          cache: 'npm'
 
       - name: install
-        run: yarn install
+        run: npm ci --legacy-peer-deps
 
       - name: build
-        run: yarn build
+        run: npm run build
 
       - name: deploy staging
-        run: yarn serverless deploy -f processImage
+        run: npx serverless deploy function -f processImage
         env:
           STAGE: production
-          S3_BUCKET_ARN: ${{ secrets.S3_BUCKET_ARN }}
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
+          DOMAIN: images.sjofartstidningen.se

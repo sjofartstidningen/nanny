@@ -1,16 +1,17 @@
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import winston from 'winston';
+
 import { getEnv } from './get-env';
 
 const isDev = getEnv('NODE_ENV', 'development') === 'development';
 const isTest = getEnv('NODE_ENV', 'development') === 'test';
 
 const payload: { [key: string]: any } = {};
-const lambda = winston.format(info => {
+const lambda = winston.format((info) => {
   return { ...info, ...payload };
 });
 
-const errorJson = winston.format(info => {
+const errorJson = winston.format((info) => {
   if (info.level === 'error' && info.error) {
     const { error } = info;
     info.error = {

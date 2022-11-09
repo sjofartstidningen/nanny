@@ -1,8 +1,6 @@
 import sharp from 'sharp';
-import {
-  mockApiGatewayEvent,
-  mockLambdaContext,
-} from '../__fixtures__/aws-lambda';
+
+import { mockApiGatewayEvent, mockLambdaContext } from '../__fixtures__/aws-lambda';
 import { processImage } from '../handler';
 
 jest.mock('../s3');

@@ -1,23 +1,44 @@
 service: nanny
+frameworkVersion: '2'
 
 plugins:
-  - serverless-apigw-binary
-  - serverless-apigwy-binary
   - serverless-api-cloudfront
 
-custom: ${file(./serverless.config.js)}
+custom:
+  defaultStage: staging
+  defaultRegion: 'eu-north-1'
+  apiCloudFront:
+    domain: ${env:DOMAIN}
+    certificate: ${env:AWS_CERTIFICATE_ARN}
+    compress: true
+    cookies: 'none'
+    headers:
+      - 'Accept'
+    querystring: 'all'
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs16.x
   stage: ${opt:stage, self:custom.defaultStage}
   region: ${opt:region, self:custom.defaultRegion}
+  lambdaHashingVersion: '20201221'
 
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
         - 's3:GetObject'
-      Resource: ${env:S3_BUCKET_ARN}
+      Resource: arn:aws:s3:::${env:S3_BUCKET_NAME}
+
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
+      - 'image/*'
+      - 'image/apng'
+      - 'image/gif'
+      - 'image/jpeg'
+      - 'image/png'
+      - 'image/svg+xml'
+      - 'image/webp'
 
 package:
   exclude:
@@ -37,4 +58,3 @@ functions:
       - http:
           path: '{proxy+}'
           method: get
-          contentHandling: CONVERT_TO_BINARY

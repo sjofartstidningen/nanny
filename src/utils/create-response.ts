@@ -44,30 +44,19 @@ const createResponse = (
    * string.
    */
   if (isBuffer && !contentType) {
-    throw new InternalServerError(
-      'If body is passed as a buffer a contentType must be passed',
-    );
+    throw new InternalServerError('If body is passed as a buffer a contentType must be passed');
   }
 
   return {
     statusCode,
     headers: {
-      'Content-Type':
-        contentType || (isPlainText ? 'text/plain' : 'application/json'),
+      'Content-Type': contentType || (isPlainText ? 'text/plain' : 'application/json'),
       'Cache-Control':
-        typeof cache === 'number'
-          ? `max-age=${cache}`
-          : cache
-          ? `max-age=${365 * 24 * 60 * 60}`
-          : 'no-cache',
+        typeof cache === 'number' ? `max-age=${cache}` : cache ? `max-age=${365 * 24 * 60 * 60}` : 'no-cache',
       'Last-Modified': new Date().toUTCString(),
       ...(headers ? headers : null),
     },
-    body: isBuffer
-      ? body.toString('base64')
-      : typeof body === 'string'
-      ? body
-      : JSON.stringify(body),
+    body: isBuffer ? body.toString('base64') : typeof body === 'string' ? body : JSON.stringify(body),
     isBase64Encoded: isBuffer,
   };
 };

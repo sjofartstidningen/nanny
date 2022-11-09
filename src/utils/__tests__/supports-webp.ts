@@ -6,8 +6,7 @@ describe('Util: supportsWebp', () => {
     expect(supportsWebp({ Accept: 'image/*' })).toBeFalsy();
     expect(
       supportsWebp({
-        Accept:
-          'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
       }),
     ).toBeTruthy();
     expect(supportsWebp({ Foo: 'bar' })).toBeFalsy();

@@ -1,11 +1,9 @@
-import {
-  APIGatewayProxyEvent,
-  Context,
-  APIGatewayProxyCallback,
-} from 'aws-lambda';
+import { extname } from 'node:path';
+
+import { APIGatewayProxyCallback, APIGatewayProxyEvent, Context } from 'aws-lambda';
 import { Forbidden, HttpError } from 'http-errors';
 import * as mime from 'mime-types';
-import { extname } from 'path';
+
 import * as Image from './image';
 import * as S3 from './s3';
 import { canProcess } from './utils/can-process';
@@ -86,8 +84,7 @@ async function processImage(
      * requests to S3 during heavy load.
      */
     const { file, info: fileInfo } = await S3.getObject(key);
-    const contentType =
-      fileInfo.contentType || mime.lookup(extension) || undefined;
+    const contentType = fileInfo.contentType || mime.lookup(extension) || undefined;
 
     /**
      * We need to check that the file fetched from S3 actually is an image that
@@ -142,16 +139,13 @@ async function processImage(
     } else {
       statusCode = 500;
       message = 'Internal server error';
-      if (getEnv('NODE_ENV', 'development') !== 'production') {
+      if (getEnv('NODE_ENV', 'development') !== 'production' && error instanceof Error) {
         message += `: ${error.message}`;
       }
     }
 
     logger.error('Failure, error response', { error });
-    return callback(
-      null,
-      createResponse(message, { statusCode, cache: false }),
-    );
+    return callback(null, createResponse(message, { statusCode, cache: false }));
   }
 }
 

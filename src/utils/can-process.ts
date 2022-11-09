@@ -1,6 +1,7 @@
+import { extname } from 'node:path';
+
 import isAnimated from 'animated-gif-detector';
 import * as mime from 'mime-types';
-import { extname } from 'path';
 
 const allowedMimeTypes = [
   mime.lookup('png'),
@@ -25,10 +26,7 @@ const allowedMimeTypes = [
  * @param {{ key: string; contentType?: string }} { contentType, key }
  * @returns {boolean}
  */
-const canProcess = (
-  file: Buffer,
-  { contentType, key }: { key: string; contentType?: string },
-): boolean => {
+const canProcess = (file: Buffer, { contentType, key }: { key: string; contentType?: string }): boolean => {
   const type = contentType || mime.lookup(extname(key));
   if (!allowedMimeTypes.includes(type)) return false;
   if (type === allowedMimeTypes[2] && isAnimated(file)) return false;

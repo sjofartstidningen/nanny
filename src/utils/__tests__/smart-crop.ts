@@ -1,15 +1,11 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { promisify } from 'util';
-import { smartCrop } from '../smart-crop';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 
-const readFile = promisify(fs.readFile);
+import { smartCrop } from '../smart-crop';
 
 describe('Util: smartCrop', () => {
   it('should intelligently choose area to extract from image based on expected width and height', async () => {
-    const file = await readFile(
-      path.join(__dirname, '../../test-utils/bucket/image.png'),
-    );
+    const file = await fs.readFile(path.join(__dirname, '../../test-utils/bucket/image.png'));
 
     const result = await smartCrop(file, { width: 200, height: 200 });
     expect(result).toMatchSnapshot();

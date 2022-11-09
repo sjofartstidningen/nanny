@@ -1,4 +1,5 @@
 import { BadRequest } from 'http-errors';
+
 import { parseQuery } from '../parse-query';
 
 describe('util: parseQuery', () => {
