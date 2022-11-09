@@ -1,14 +1,18 @@
 service: nanny
-frameworkVersion: '2'
+frameworkVersion: '3'
 
 plugins:
   - serverless-api-cloudfront
 
+params:
+  default:
+    domain: ${sls:stage}.images.sjofartstidningen.se
+  production:
+    domain: images.sjofartstidningen.se
+
 custom:
-  defaultStage: staging
-  defaultRegion: 'eu-north-1'
   apiCloudFront:
-    domain: ${env:DOMAIN}
+    domain: ${param:domain}
     certificate: ${env:AWS_CERTIFICATE_ARN}
     compress: true
     cookies: 'none'
@@ -19,9 +23,8 @@ custom:
 provider:
   name: aws
   runtime: nodejs16.x
-  stage: ${opt:stage, self:custom.defaultStage}
-  region: ${opt:region, self:custom.defaultRegion}
-  lambdaHashingVersion: '20201221'
+  stage: ${sls:stage}
+  region: eu-north-1
 
   iamRoleStatements:
     - Effect: 'Allow'
