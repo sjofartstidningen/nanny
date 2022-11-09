@@ -2,20 +2,17 @@
 # The Docker env is used in order to mimic the AWS Lambda execution environment
 # as closely as possible
 
-FROM lambci/lambda:build-nodejs8.10
-RUN npm install -g yarn
+FROM node:16.18.1-bullseye-slim
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
 
-# The STAGE environment variable can be overridden by defining it before deploy
-# Example: `STAGE=production yarn run deploy`
-ENV STAGE development
+WORKDIR /usr/src/app
 
-# We copy package.json and yarn.lock before any other files in order to leverage
-# Dockers caching before running `yarn install`
-COPY package.json yarn.lock ./
-RUN yarn install --force
+COPY ./package.json ./
+COPY ./package-lock.json ./
+RUN npm ci --legacy-peer-deps
 
-# All files are blindly copied over (except those defined inside .dockerignore)
 COPY . .
+RUN npm run build
 
-# Lastly we build out the dist files
-RUN yarn run build
+# USER node
+CMD ["dumb-init", "./node_modules/.bin/serverless", "deploy", "function", "-f", "processImage", "-s", "development"]

@@ -16,19 +16,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: install
-        run: yarn install
+        run: npm ci --legacy-peer-deps
 
       - name: build
-        run: yarn build
+        run: npm run build
 
       - name: deploy staging
-        run: yarn serverless deploy function -f processImage
+        run: npx serverless deploy function -f processImage
         env:
           STAGE: production
-          S3_BUCKET_ARN: ${{ secrets.S3_BUCKET_ARN }}
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -27,7 +27,7 @@ provider:
     - Effect: 'Allow'
       Action:
         - 's3:GetObject'
-      Resource: ${env:S3_BUCKET_ARN}
+      Resource: arn:aws:s3:::${env:S3_BUCKET_NAME}
 
   apiGateway:
     binaryMediaTypes:
