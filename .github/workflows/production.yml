@@ -25,9 +25,8 @@ jobs:
         run: npm run build
 
       - name: deploy staging
-        run: npx serverless deploy function -f processImage
+        run: npx serverless deploy function --function=processImage --stage=production
         env:
-          STAGE: production
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
