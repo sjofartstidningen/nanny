@@ -12,7 +12,8 @@ it on CI.
 This script should be run when changes that affect the whole stack have been made – e.g changes in `serverless.yml`:
 
 ```sh
-STAGE=production yarn run deploy
+npm run deploy:staging
+npm run deploy:production
 ```
 
 ### Deploy updates to function only
@@ -20,5 +21,6 @@ STAGE=production yarn run deploy
 This script should be run when only source code has changed.
 
 ```sh
-STAGE=production yarn run deploy:fn
+npm run deploy:fn:staging
+npm run deploy:fn:production
 ```

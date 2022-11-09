@@ -7,6 +7,7 @@
   "author": "Adam Bergman <adam@fransvilhelm.com>",
   "license": "MIT",
   "private": true,
+  "main": "src/handler.ts",
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "ncc build src/handler.ts -o dist --external aws-sdk",
@@ -42,7 +43,6 @@
     "@types/mime-types": "^2.1.1",
     "@types/node": "^18.11.9",
     "@types/ramda": "^0.28.18",
-    "@types/s3rver": "^3.7.0",
     "@types/sharp": "^0.31.0",
     "@vercel/ncc": "^0.34.0",
     "eslint": "^8.27.0",
