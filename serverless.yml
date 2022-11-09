@@ -21,6 +21,7 @@ provider:
   runtime: nodejs16.x
   stage: ${opt:stage, self:custom.defaultStage}
   region: ${opt:region, self:custom.defaultRegion}
+  lambdaHashingVersion: '20201221'
 
   iamRoleStatements:
     - Effect: 'Allow'
