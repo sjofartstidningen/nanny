@@ -26,11 +26,13 @@ provider:
   stage: ${sls:stage}
   region: eu-north-1
 
-  iamRoleStatements:
-    - Effect: 'Allow'
-      Action:
-        - 's3:GetObject'
-      Resource: arn:aws:s3:::${env:S3_BUCKET_NAME}
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 's3:GetObject'
+          Resource: arn:aws:s3:::${env:S3_BUCKET_NAME}
 
   apiGateway:
     binaryMediaTypes:
@@ -44,10 +46,12 @@ provider:
       - 'image/webp'
 
 package:
-  exclude:
-    - '**/*'
-  include:
-    - dist/**
+  patterns:
+    - '!node_modules/**'
+    - '!.husky/**'
+    - '!patches/**'
+    - '!src/**'
+    - 'dist/**'
 
 functions:
   processImage:
