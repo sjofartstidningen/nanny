@@ -1,11 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { promisify } from 'util';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 
 import { resize } from '../image';
 import * as Crop from '../utils/smart-crop';
-
-const readFile = promisify(fs.readFile);
 
 const cache = new Map<string, Buffer>();
 
@@ -13,7 +10,7 @@ const readImageSource = async (image: string): Promise<Buffer> => {
   const fromCache = cache.get(image);
   if (fromCache) return fromCache;
 
-  const buffer = await readFile(path.join(__dirname, '../test-utils/bucket', image));
+  const buffer = await fs.readFile(path.join(__dirname, '../test-utils/bucket', image));
 
   cache.set(image, buffer);
   return buffer;

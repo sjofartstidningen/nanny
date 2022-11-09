@@ -1,8 +1,8 @@
-import _fs from 'fs';
-import mime from 'mime-types';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
-const fs = _fs.promises;
+import mime from 'mime-types';
+
 const bucketPath = path.join(__dirname, '../test-utils/bucket');
 
 export const getObject = jest.fn(async (key: string) => {

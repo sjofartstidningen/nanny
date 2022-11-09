@@ -13,12 +13,12 @@
     "test": "jest",
     "lint": "eslint src",
     "type-check": "tsc --noEmit",
-    "deploy": "lambi --env-file .env --env STAGE=${STAGE} 'yarn run build && serverless deploy'",
-    "deploy:fn": "lambi --env-file .env --env STAGE=${STAGE} 'yarn run build && serverless deploy -f processImage'",
-    "remove": "lambi --env-file .env --env STAGE=${STAGE} 'serverless remove --stage=${STAGE}'",
+    "deploy:staging": "npm run docker:run 'npx serverless deploy -s staging'",
+    "deploy:production": "npm run docker:run 'npx serverless deploy -s production'",
+    "deploy:fn:staging": "npm run docker:run 'npx serverless deploy function -f processImage -s staging'",
+    "deploy:fn:production": "npm run docker:run 'npx serverless deploy function -f processImage -s production'",
     "docker:run": "docker run --env-file=.env nanny /bin/bash -c",
     "predocker:run": "docker build -t nanny .",
-    "example": "parcel serve preview/index.pug",
     "prepare": "husky install"
   },
   "dependencies": {

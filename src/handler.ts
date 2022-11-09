@@ -1,7 +1,8 @@
+import { extname } from 'node:path';
+
 import { APIGatewayProxyCallback, APIGatewayProxyEvent, Context } from 'aws-lambda';
 import { Forbidden, HttpError } from 'http-errors';
 import * as mime from 'mime-types';
-import { extname } from 'path';
 
 import * as Image from './image';
 import * as S3 from './s3';

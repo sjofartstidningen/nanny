@@ -1,7 +1,8 @@
+import { extname } from 'node:path';
+
 import * as AWS from 'aws-sdk';
 import createError from 'http-errors';
 import * as mime from 'mime-types';
-import { extname } from 'path';
 
 import { getEnv } from './utils/get-env';
 

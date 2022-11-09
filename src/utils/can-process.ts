@@ -1,6 +1,7 @@
+import { extname } from 'node:path';
+
 import isAnimated from 'animated-gif-detector';
 import * as mime from 'mime-types';
-import { extname } from 'path';
 
 const allowedMimeTypes = [
   mime.lookup('png'),

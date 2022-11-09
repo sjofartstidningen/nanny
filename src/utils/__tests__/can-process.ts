@@ -1,14 +1,12 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
+
 import * as mime from 'mime-types';
-import * as path from 'path';
-import { promisify } from 'util';
 
 import { canProcess } from '../can-process';
 
-const readFile = promisify(fs.readFile);
-
 const readImageSource = async (image: string): Promise<Buffer> =>
-  readFile(path.join(__dirname, '../../test-utils/bucket', image));
+  fs.readFile(path.join(__dirname, '../../test-utils/bucket', image));
 
 describe('Util: canProcess', () => {
   [
